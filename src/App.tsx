@@ -106,7 +106,23 @@ export default function App() {
     <a className="skip-link" href="#main">Skip to content</a>
     <Header reducedMotion={reducedMotion} />
     <main id="main"><Hero reducedMotion={reducedMotion} /><Perspective reducedMotion={reducedMotion} /><Services reducedMotion={reducedMotion} /><Corridors reducedMotion={reducedMotion} /><People reducedMotion={reducedMotion} /><Contact reducedMotion={reducedMotion} /></main>
-    <footer className="footer"><div className="footer-main"><Brand /><p>{company.location}<br /><a href={`mailto:${company.email}`}>{company.email}</a></p><a href="#home" className="back-top">Back to top</a></div><div className="footer-bottom"><span>© {new Date().getFullYear()} {company.name}</span><span>Corporate structuring · Trade finance · Cross-border advisory</span></div></footer>
+    <footer className="footer">
+      <div className="footer-heading">
+        <Brand />
+        <a href="#home" className="footer-return glass" aria-label="Return to top" title="Return to top">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M6 11L12 5L18 11" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </a>
+      </div>
+      <div className="footer-details">
+        <p className="footer-practice">Corporate structuring.<br />Trade finance.<br />Cross-border advisory.</p>
+        <div className="footer-office"><h2>OUR OFFICE</h2><address>{company.address}</address></div>
+        <div className="footer-contact"><h2>DIRECT CONTACT</h2><p className="footer-partner">{company.partner.name}</p><p className="footer-role">{company.partner.title}</p><a href={`mailto:${company.email}`}>{company.email}</a></div>
+      </div>
+      <div className="footer-bottom">
+        <span>© {new Date().getFullYear()} {company.name}</span>
+        <nav aria-label="Footer navigation">{navigation.map(item => <a key={item.id} href={`#${item.id}`}>{item.label}</a>)}</nav>
+      </div>
+    </footer>
 
   </div></MotionConfig>;
 }

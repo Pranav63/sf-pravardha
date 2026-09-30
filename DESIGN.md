@@ -14,7 +14,7 @@ Motion runs by default and respects live changes to the operating system's reduc
 
 The introduction's framed monogram is replaced by a borderless moving light ribbon. Buttons use clean text labels without arrows. Glass styling remains concentrated on floating navigation and controls, with directional highlights, softer depth and restrained press feedback. Navigation takes a dark green tint over the map and contact sections; opening its mobile menu adds frosting for legibility. Active selections use simple fills within the material instead of stacking glass layers, following Apple's Liquid Glass guidance. The mobile menu combines its label and icon into one compact control with comfortable touch targets.
 
-The opening eyebrow, introduction sub-footer and map atlas footer have been removed; the Gulf hero note stays on desktop only. A portrait-led people section uses the supplied image of Parul Gupta in place of the floating monogram tag. The contact section presents a direct invitation to email her, without a form or a backend.
+The opening eyebrow, introduction sub-footer and map atlas footer have been removed; the Gulf hero note stays on desktop only. A portrait-led people section uses the supplied image of Parul Gupta in place of the floating monogram tag. The contact section presents a direct invitation to email her, without a form or a backend. The footer groups the practice, full office address and direct partner contact beneath the brand. A compact glass return-to-top control uses a gently rising arrow and native smooth scrolling; reduced motion removes both animations. The regional tagline has been removed throughout.
 
 ## Research references
 

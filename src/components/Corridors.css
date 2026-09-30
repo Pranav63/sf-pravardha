@@ -172,7 +172,6 @@
 @media (max-width: 650px) {
   .corridor-section { padding: 28px 20px 62px; }
   .corridor-topline { font-size: 12px; gap: 28px; }
-  .corridor-topline > span:last-child { max-width: 145px; text-align: right; }
   .corridor-heading { display: block; padding: 52px 4px 35px; }
   .corridor-heading h2 { font-size: clamp(48px, 13.6vw, 68px); }
   .corridor-heading > p { max-width: 360px; margin: 25px 0 0; font-size: 17px; line-height: 1.7; }

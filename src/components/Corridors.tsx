@@ -58,7 +58,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
 
   return (
     <section ref={section} className="corridor-section" id="perspective" aria-labelledby="corridor-title" data-motion={running ? 'running' : 'paused'}>
-      <div className="corridor-topline"><span>02 / A wider perspective</span><span>UAE based. Internationally minded.</span></div>
+      <div className="corridor-topline"><span>02 / A wider perspective</span></div>
       <div className="corridor-heading">
         <h2 id="corridor-title">Opportunity has<br /><em>no borders.</em></h2>
         <p>Rooted in the Gulf. Connected to the commercial possibilities beyond it.<span>Explore the perspectives behind our advice.</span></p>
