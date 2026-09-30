@@ -10,13 +10,16 @@ The revised experience combines continuous scroll-linked hero transforms, a pinn
 
 Expertise uses a live Three.js sculpture of architectural portals in glass and champagne brass. Its center stays fixed while scrolling rotates the actual geometry around its vertical axis, revealing new faces, openings and material reflections. The renderer loads when the section approaches. The generated hero image remains unchanged.
 
-Motion runs by default and respects live changes to the operating system's reduced-motion preference. The floating motion toggle has been removed. Short viewports, mobile screens and an initially reduced-motion preference use service selection without a long sticky track. Enabling reduced motion after scrolling begins preserves the track height to avoid moving the reader elsewhere on the page.
+Motion runs by default and respects live changes to the operating system's reduced-motion preference. The floating motion toggle has been removed. Phones and tablets under 960px show all three service articles in native page flow, with one sticky 3D backdrop behind the reading layer. There are no service tabs to discover or select on mobile. Short desktop viewports and an initially reduced-motion desktop preference retain direct service selection without a long sticky track. Enabling reduced motion after scrolling begins preserves the track height to avoid moving the reader elsewhere on the page.
 
-The introduction's framed monogram is replaced by a borderless moving light ribbon. Buttons use clean text labels without arrows. Glass styling remains concentrated on floating navigation and controls, with directional highlights, softer depth and restrained press feedback. Navigation takes a dark green tint over the map and contact sections; opening its mobile menu adds frosting for legibility. Active selections use simple fills within the material instead of stacking glass layers, following Apple's Liquid Glass guidance.
+The introduction's framed monogram is replaced by a borderless moving light ribbon. Buttons use clean text labels without arrows. Glass styling remains concentrated on floating navigation and controls, with directional highlights, softer depth and restrained press feedback. Navigation takes a dark green tint over the map and contact sections; opening its mobile menu adds frosting for legibility. Active selections use simple fills within the material instead of stacking glass layers, following Apple's Liquid Glass guidance. The mobile menu combines its label and icon into one compact control with comfortable touch targets.
+
+The opening eyebrow, introduction sub-footer and map atlas footer have been removed; the Gulf hero note stays on desktop only. A portrait-led people section uses the supplied image of Parul Gupta in place of the floating monogram tag. The contact section presents a direct invitation to email her, without a form or a backend.
 
 ## Research references
 
 - [Apple Materials](https://developer.apple.com/design/human-interface-guidelines/materials) and [Meet Liquid Glass](https://developer.apple.com/videos/play/wwdc2025/219/): floating controls, luminosity, layered edge highlights and readable material thickness. Adapted to CSS backdrop blur; this is not Apple's native optical renderer.
+- [Apple Layout](https://developer.apple.com/design/human-interface-guidelines/layout) and [Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility): adapt content and navigation to available space, preserve readable content, and provide comfortable touch targets.
 - [Apple Motion](https://developer.apple.com/design/human-interface-guidelines/motion): responsive, interruptible transitions and reduced motion.
 - [Motion scroll animations](https://motion.dev/docs/react-scroll-animations): continuous transforms driven by scroll position. `motions.dev` was inaccessible; `motion.dev` is the verified library site.
 - [Componentry Scroll Choreography](https://componentry.dev/docs/components/scroll-choreography), [Scroll Split Card](https://componentry.dev/docs/components/scroll-split-card), and [Sticky Scroll Cards](https://componentry.dev/docs/components/sticky-scroll-cards): composition, depth and scenes that evolve with scrolling.
@@ -31,5 +34,6 @@ These are design references. The implementation is original React, CSS, Motion a
 
 - `public/images/architecture.jpg`: original hero artwork retained.
 - `src/components/ServiceSculpture.tsx`: procedural 3D expertise sculpture, rendered in the browser.
+- `public/images/md_parul.png`: supplied portrait of Parul Gupta.
 - `public/images/pravardha-logo.jpeg`: supplied brand artwork.
 - Fonts are bundled locally with Fontsource.

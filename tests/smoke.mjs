@@ -60,6 +60,7 @@ try {
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'full');
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('#approach')).toHaveCount(0);
+  await expect(page.locator('.hero-eyebrow, .manifesto-rule, .corridor-atlas-note')).toHaveCount(0);
   await expect(page.locator('#intro-title')).toContainText('Ambition opens doors.');
   await checkCleanControls(page);
   assert.match(await page.title(), /Pravardha/);
@@ -177,7 +178,7 @@ try {
   await expect(sculptureCanvas).toBeVisible();
   await page.getByTestId('service-stage').screenshot({ path: 'test-results/desktop-services.png' });
 
-  await expect(page.getByRole('link', { name: 'Start a conversation', exact: true })).toHaveAttribute('href', /^mailto:parulgupta@hotmail\.com/);
+  await expect(page.locator('#contact .contact-button')).toHaveAttribute('href', /^mailto:parulgupta@hotmail\.com/);
   for (const link of await page.locator('a[href^="#"]').all()) {
     const target = await link.getAttribute('href');
     await expect(page.locator(target), `Anchor target ${target}`).toHaveCount(1);
@@ -203,6 +204,7 @@ try {
         assert.ok(introWords[index].left - introWords[index - 1].right >= 3, `Animated introduction words must retain visible spaces at ${width}px.`);
       }
     }
+    if (width <= 780) await expect(page.locator('.hero-glass-note')).toBeHidden();
     const bodySize = await page.locator('.hero-description').evaluate((element) => parseFloat(getComputedStyle(element).fontSize));
     assert.ok(bodySize >= (width >= 1024 ? 18 : 16), `Hero body type is too small at ${width}px.`);
   }
@@ -211,33 +213,80 @@ try {
   await page.goto(url, { waitUntil: 'networkidle' });
   await goTo(page, 0);
   const menu = page.locator('.menu-toggle');
-  await menu.click();
+  const menuBounds = await menu.boundingBox();
+  assert.ok(menuBounds.width >= 44 && menuBounds.height >= 44, 'The mobile menu needs a comfortable touch target.');
+  const menuAlignment = await menu.evaluate((element) => {
+    const label = element.querySelector('.menu-label').getBoundingClientRect();
+    const icon = element.querySelector('.menu-lines').getBoundingClientRect();
+    return { gap: icon.left - label.right, centerDifference: Math.abs(label.top + label.height / 2 - icon.top - icon.height / 2) };
+  });
+  assert.ok(menuAlignment.gap >= 4 && menuAlignment.gap <= 12 && menuAlignment.centerDifference <= 2, 'The menu label and icon should form one compact, aligned control.');
+  await menu.click({ position: { x: 8, y: 8 } });
   await expect(menu).toHaveAttribute('aria-expanded', 'true');
   await checkCleanControls(page);
+  const mobileNavigation = page.getByRole('navigation', { name: 'Mobile navigation' });
+  const linkHeights = await mobileNavigation.getByRole('link').evaluateAll((links) => links.map((link) => link.getBoundingClientRect().height));
+  assert.ok(linkHeights.every((height) => height >= 44), 'Mobile navigation links must be easy to tap.');
   await page.keyboard.press('Escape');
   await expect(menu).toHaveAttribute('aria-expanded', 'false');
   await expect(menu).toBeFocused();
   await menu.click();
-  await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('link', { name: 'Expertise', exact: true }).click();
+  await mobileNavigation.getByRole('link', { name: 'Expertise', exact: true }).click();
   await expect(menu).toHaveAttribute('aria-expanded', 'false');
+  await expect(mobileNavigation).toHaveCount(0);
+  await expect(page.locator('#expertise'), 'The mobile menu must navigate to its section after closing.').toBeInViewport();
   await expect(page.locator('#expertise')).not.toHaveClass(/service-track--pinned/);
-  await page.getByRole('button', { name: /Trade finance advisory/ }).click();
-  await expect(page.getByTestId('service-stage')).toHaveAttribute('data-active', '1');
-  await page.locator('.service-visual').scrollIntoViewIfNeeded();
-  await expect(sculpture).toHaveAttribute('data-renderer', 'webgl');
-  let mobileFrame;
-  await expect.poll(async () => {
-    const frame = await sculpture.getAttribute('data-frame');
-    const settled = frame === mobileFrame;
-    mobileFrame = frame;
-    return settled;
-  }, { timeout: 10000, intervals: [100, 150, 250] }).toBe(true);
-  const mobileYaw = Number(await sculpture.getAttribute('data-yaw'));
-  await page.evaluate(() => window.scrollBy({ top: 100, behavior: 'instant' }));
-  await expect(sculpture).toBeInViewport();
-  await expect.poll(async () => Number(await sculpture.getAttribute('data-yaw'))).toBeGreaterThan(mobileYaw + .02);
-  assert.equal(await transformOf(sculpture), 'none', 'Mobile scrolling must rotate the 3D object without tilting its canvas.');
-  await page.getByTestId('service-stage').screenshot({ path: 'test-results/mobile-services.png' });
+  await expect(page.locator('.service-button:visible')).toHaveCount(0);
+  const mobileChapters = page.locator('.mobile-service-chapter');
+  await expect(mobileChapters).toHaveCount(3);
+  await expect(sculptureCanvas).toHaveCount(1);
+  const mobileAngles = [];
+  const mobileHeadings = ['Built around your', 'Connect the transaction.', 'Different markets.'];
+  for (const [index, heading] of mobileHeadings.entries()) {
+    const chapter = mobileChapters.nth(index);
+    await chapter.locator('h3').evaluate((element) => window.scrollTo({ top: element.getBoundingClientRect().top + scrollY - 130, behavior: 'instant' }));
+    await expect(chapter.locator('h3')).toContainText(heading);
+    await expect(chapter.locator('h3')).toBeInViewport({ ratio: 1 });
+    await expect(sculpture).toHaveAttribute('data-renderer', 'webgl');
+    await expect(sculptureCanvas).toBeInViewport();
+    if (index) await expect.poll(async () => Number(await sculpture.getAttribute('data-yaw'))).toBeGreaterThan(mobileAngles[index - 1] + .1);
+    let mobileFrame;
+    await expect.poll(async () => {
+      const frame = await sculpture.getAttribute('data-frame');
+      const settled = frame === mobileFrame;
+      mobileFrame = frame;
+      return settled;
+    }, { timeout: 10000, intervals: [100, 150, 250] }).toBe(true);
+    mobileAngles.push(Number(await sculpture.getAttribute('data-yaw')));
+    const reading = await chapter.locator('.mobile-service-description').evaluate((element) => {
+      const box = element.getBoundingClientRect();
+      const canvas = document.querySelector('[data-testid="sculpture-canvas"]').getBoundingClientRect();
+      const style = getComputedStyle(element);
+      const hit = document.elementFromPoint(box.left + box.width / 2, Math.min(box.top + 12, innerHeight - 10));
+      return {
+        left: box.left, right: box.right, fontSize: parseFloat(style.fontSize), opacity: Number(style.opacity),
+        overlapsArt: box.top < canvas.bottom && box.bottom > canvas.top && box.left < canvas.right && box.right > canvas.left,
+        textReceivesPointer: Boolean(hit && element.contains(hit)), userSelect: style.userSelect,
+      };
+    });
+    assert.ok(reading.left >= 0 && reading.right <= 390 && reading.fontSize >= 16 && reading.opacity === 1, `Mobile chapter ${index + 1} must remain readable: ${JSON.stringify(reading)}`);
+    assert.ok(reading.overlapsArt && reading.textReceivesPointer && reading.userSelect !== 'none', 'The sculpture should sit behind selectable text without blocking it.');
+    assert.equal(await transformOf(sculpture), 'none', 'Mobile scrolling must rotate the 3D object without tilting its canvas.');
+    await page.screenshot({ path: `test-results/mobile-services-${index + 1}.png` });
+    const enquiry = chapter.getByRole('link', { name: 'Discuss your requirements' });
+    assert.ok(decodeURIComponent(await enquiry.getAttribute('href')).includes(serviceTitles[index].toLowerCase()));
+    await enquiry.scrollIntoViewIfNeeded();
+    await expect(enquiry).toBeInViewport();
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'Service text must not cause horizontal scrolling.');
+  }
+  assert.equal(new Set(mobileAngles).size, 3, 'Ordinary mobile scrolling must reveal all three 3D perspectives without any service taps.');
+  await expect(page.getByTestId('service-stage')).toHaveAttribute('data-active', '2');
+  const portrait = page.locator('#about img[src="/images/md_parul.png"]');
+  await portrait.scrollIntoViewIfNeeded();
+  await expect.poll(() => portrait.evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
+  await expect(page.locator('.partner-monogram')).toHaveCount(0);
+  await page.locator('#about').screenshot({ path: 'test-results/mobile-people.png' });
+  await page.locator('#contact').screenshot({ path: 'test-results/mobile-contact.png' });
   await goTo(page, 0);
   await expect.poll(() => identityTransform(page.locator('.hero-line > span').last())).toBe(true);
   await page.screenshot({ path: 'test-results/mobile-hero.png' });
@@ -267,14 +316,30 @@ try {
   await reducedPage.locator('.corridor-controls button').filter({ hasText: 'Singapore' }).click();
   await expect(reducedPage.getByTestId('route-map')).toHaveAttribute('data-region', 'Singapore');
   await expect(reducedPage.locator('.corridor-detail h3')).toHaveText('An international point of view.');
-  for (const selector of ['.hero-eyebrow', '.hero-content', '#intro-title > span', '.service-copy', '.corridor-detail']) {
+  for (const selector of ['.hero-content', '#intro-title > span', '.service-copy', '.corridor-detail']) {
     const opacities = await reducedPage.locator(selector).evaluateAll((elements) => elements.map((element) => Number(getComputedStyle(element).opacity)));
     assert.ok(opacities.length && opacities.every((opacity) => opacity === 1), `Reduced-motion content must remain visible: ${selector}`);
   }
   await reducedPage.screenshot({ path: 'test-results/desktop-reduced-full.png', fullPage: true });
+  await reducedPage.setViewportSize({ width: 390, height: 844 });
+  await reducedPage.goto(url, { waitUntil: 'networkidle' });
+  await expect(reducedPage.locator('.mobile-service-chapter')).toHaveCount(3);
+  await expect(reducedPage.locator('.service-button:visible')).toHaveCount(0);
+  let reducedMobileAngle;
+  for (const chapter of await reducedPage.locator('.mobile-service-chapter').all()) {
+    await chapter.locator('h3').evaluate((element) => window.scrollTo({ top: element.getBoundingClientRect().top + scrollY - 130, behavior: 'instant' }));
+    await expect(chapter.locator('h3')).toBeInViewport({ ratio: 1 });
+    await expect(reducedPage.getByTestId('service-sculpture')).toHaveAttribute('data-renderer', 'webgl');
+    const visibleText = await chapter.locator('h3, .mobile-service-description').evaluateAll((elements) => elements.every((element) => Number(getComputedStyle(element).opacity) === 1));
+    assert.ok(visibleText, 'Reduced motion must leave every mobile chapter readable without selecting a tab.');
+    await reducedPage.waitForTimeout(150);
+    const angle = Number(await reducedPage.getByTestId('service-sculpture').getAttribute('data-yaw'));
+    if (reducedMobileAngle === undefined) reducedMobileAngle = angle;
+    else assert.equal(angle, reducedMobileAngle, 'Reduced motion must freeze the mobile sculpture while all chapters remain scrollable.');
+  }
   await reducedContext.close();
   assert.deepEqual(errors, [], `Browser errors: ${errors.join('\n')}`);
-  console.log('PASS: live 3D rotation with stable framing, idle rendering and OS motion continuity; hero/map motion, scroll chapters, clean arrow-free controls, keyboard navigation, shorter page, word spacing, contact links, mobile menu, five viewport widths, readable type, reduced motion, and browser/network checks.');
+  console.log('PASS: live 3D rotation with stable framing, idle rendering and OS motion continuity; hero/map motion, scroll chapters, clean arrow-free controls, keyboard navigation, shorter page, word spacing, contact links, native mobile service reading with a rotating 3D backdrop, compact touch-friendly menu, supplied portrait, five viewport widths, readable type, reduced motion, and browser/network checks.');
 } finally {
   await browser?.close();
   server.kill();

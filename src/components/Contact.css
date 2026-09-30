@@ -1,0 +1,31 @@
+.contact { position: relative; overflow: hidden; background: #123e32; color: #f5f3ed; padding: 120px 8%; }
+.contact-content { position: relative; z-index: 1; display: grid; grid-template-columns: 1.15fr 1fr; gap: 8%; align-items: center; }
+.contact .eyebrow { color: #c5ceba; margin-bottom: 30px; }
+.contact h2 { font-size: clamp(65px, 6.5vw, 105px); line-height: 1.03; letter-spacing: -.045em; }
+.contact h2 em { color: #c4b48b; }
+.contact-invitation { max-width: 450px; }
+.contact-invitation > p { font-size: 19px; line-height: 1.7; color: #e0e6d8; }
+.contact-invitation > p + p { margin-top: 21px; color: #c1ceb9; font-size: 17px; }
+.contact-button.glass { display: inline-flex; align-items: center; justify-content: center; min-height: 62px; padding: 19px 31px; margin-top: 31px; border-radius: 100px; background: linear-gradient(150deg, #e5ecd52e, #c8d8c212 65%, #e3e9cb21); color: #f8f8ed; border-color: #e6edd052; box-shadow: inset 1px 1px 1px #ffffff65, inset -1px -1px 1px #bdd0b512, 0 15px 35px #082a282b; font-size: 17px; }
+.contact .contact-button::before { background: radial-gradient(ellipse at 35% 0%, #fff2, transparent 75%); }
+.contact-email { display: flex; align-items: center; min-height: 44px; width: fit-content; max-width: 100%; color: #c9d4be; font-size: 15px; margin-top: 15px; overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: #c9d4be55; text-underline-offset: 6px; }
+.contact-email:hover { text-decoration-color: currentColor; }
+.contact-light { width: 1000px; height: 800px; position: absolute; top: -260px; left: -330px; background: radial-gradient(ellipse, #c3ac6120, #7fbc4e08 45%, transparent 67%); pointer-events: none; }
+.contact :focus-visible { outline-color: #d6c18e; }
+@media (max-width: 1100px) {
+  .contact { padding: 100px 6%; }
+  .contact-content { gap: 6%; }
+  .contact h2 { font-size: clamp(58px, 6.5vw, 76px); }
+  .contact-invitation > p { font-size: 18px; }
+}
+@media (max-width: 780px) {
+  .contact { padding: 75px 6% 70px; }
+  .contact-content { grid-template-columns: 1fr; gap: 29px; }
+  .contact .eyebrow { font-size: 11px; margin-bottom: 22px; }
+  .contact h2 { font-size: clamp(51px, 11.8vw, 76px); }
+  .contact-invitation { max-width: 500px; }
+  .contact-invitation > p { font-size: 18px; }
+  .contact-invitation > p + p { font-size: 16px; margin-top: 17px; }
+  .contact-button.glass { min-height: 60px; margin-top: 27px; font-size: 16px; }
+  .contact-email { font-size: 14px; margin-top: 12px; }
+}

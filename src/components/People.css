@@ -1,0 +1,39 @@
+.people { display: grid; grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr); grid-template-areas: 'portrait heading' 'portrait copy'; column-gap: clamp(45px, 7.5vw, 125px); row-gap: 32px; align-content: center; padding: 120px 8%; background: #f6f4ee; }
+.people-heading { grid-area: heading; align-self: end; }
+.people-heading .eyebrow { margin-bottom: 26px; color: #607359; }
+.people-heading h2 { font-size: clamp(50px, 5.4vw, 84px); line-height: 1.02; }
+.people-heading h2 em { color: #738369; }
+.partner-portrait { grid-area: portrait; align-self: center; margin: 0; min-width: 0; }
+.partner-photo { overflow: hidden; border-radius: 8px 8px 2px 2px; background: #d8dfd8; aspect-ratio: 4 / 4.6; }
+.partner-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 36%; }
+.partner-portrait figcaption { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 21px; padding-bottom: 19px; border-bottom: 1px solid #b9c3ae66; }
+.partner-portrait h3 { font-family: var(--serif); font-size: clamp(30px, 2.5vw, 39px); line-height: 1; letter-spacing: -.03em; }
+.partner-portrait figcaption p { font-size: 12px; color: #5c6b55; line-height: 1.5; }
+.people-intro { grid-area: copy; align-self: start; max-width: 580px; }
+.people-intro > p { font-size: 18px; line-height: 1.8; color: #596951; }
+.people-intro .people-note { margin-top: 25px; font-size: 17px; color: #254d38; }
+.people-link { display: inline-flex; align-items: center; min-height: 48px; margin-top: 25px; padding: 6px 0; font-size: 15px; text-decoration: underline; text-decoration-color: #77947880; text-underline-offset: 7px; transition: text-decoration-color .2s; }
+.people-link:hover { text-decoration-color: currentColor; }
+@media (max-width: 1100px) {
+  .people { padding: 95px 6%; column-gap: 6%; }
+  .people-heading h2 { font-size: clamp(47px, 5.5vw, 65px); }
+  .people-intro > p { font-size: 17px; line-height: 1.75; }
+  .partner-portrait figcaption { flex-direction: column; gap: 8px; }
+}
+@media (max-width: 780px) {
+  .people { grid-template-columns: 1fr; grid-template-areas: 'heading' 'portrait' 'copy'; padding: 75px 6% 80px; row-gap: 31px; }
+  .people-heading .eyebrow { margin-bottom: 19px; font-size: 11px; }
+  .people-heading h2 { font-size: clamp(43px, 10.4vw, 68px); }
+  .partner-portrait { width: 100%; max-width: 560px; }
+  .partner-photo { aspect-ratio: 1 / 1; border-radius: 8px 8px 2px 2px; }
+  .partner-portrait figcaption { flex-direction: row; margin-top: 18px; padding-bottom: 17px; }
+  .partner-portrait h3 { font-size: 34px; }
+  .partner-portrait figcaption p { font-size: 12px; }
+  .people-intro { max-width: 560px; }
+  .people-intro .people-note { font-size: 16px; margin-top: 20px; }
+  .people-link { margin-top: 17px; }
+}
+@media (max-width: 360px) {
+  .partner-portrait h3 { font-size: 30px; }
+  .partner-portrait figcaption p { font-size: 11px; }
+}

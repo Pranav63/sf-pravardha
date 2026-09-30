@@ -19,11 +19,11 @@ export const company = {
     heading: 'Experience that sees\nthe whole picture.',
     text: 'Parul brings a perspective shaped by strategic advisory in India and trade finance consultancy across Singapore, Dubai, Asia and the GCC. Her work connects commercial strategy, financing requirements and the relationships that move a transaction forward.',
     note: 'Direct involvement. Considered advice. From the first conversation to the details of execution.',
-    experience: 'Trade finance consultancy since 2016',
   },
   contact: {
     heading: 'Let’s give your next\nmove a clear direction.',
-    description: 'A new market. A complex transaction. A business ready for its next chapter. Tell us what you have in mind.',
+    description: 'A new market. A complex transaction. Or a question you’re still working through.',
+    invitation: 'Tell Parul what you have in mind. We’ll start by understanding your business and what you want to do next.',
   },
 };
 

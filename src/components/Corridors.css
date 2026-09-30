@@ -149,10 +149,6 @@
 .corridor-detail h3 { margin: 12px 0 12px; font: 400 28px/1.07 var(--serif, 'Cormorant Garamond', Georgia, serif); color: #f1edda; letter-spacing: -.015em; }
 .corridor-detail p { margin: 0; font: 400 17px/1.7 var(--sans, 'Manrope', sans-serif); color: #c4d1c6; }
 .corridor-detail-focus { display: block; margin-top: 20px; padding-top: 16px; border-top: 1px solid #e9efdf20; color: #c9c69f; font: 500 12px/1.7 var(--sans, 'Manrope', sans-serif); letter-spacing: .04em; }
-.corridor-atlas-note { padding: 0 8px 6px 0; text-align: right; }
-.corridor-atlas-note > span { color: #d4d9c6; font: 500 13px/1.6 var(--sans, 'Manrope', sans-serif); letter-spacing: .13em; }
-.corridor-atlas-note i { margin-inline: 12px; font-size: 19px; font-style: normal; }
-.corridor-atlas-note p { margin: 12px 0 0; color: #96af9e; font: 400 13px/1.7 var(--sans, 'Manrope', sans-serif); }
 .corridor-section[data-motion=running] .corridor-location-pulse { animation: corridor-beacon 3s ease-out infinite; }
 .corridor-section[data-motion=running] .corridor-location:nth-child(2) .corridor-location-pulse { animation-delay: 1s; }
 .corridor-section[data-motion=running] .corridor-atlas-glow { animation: corridor-ambient 7s ease-in-out infinite alternate; }
@@ -172,7 +168,6 @@
   .corridor-geography { top: 140px; bottom: 200px; left: -10%; right: -15%; }
   .corridor-atlas-bottom { left: 24px; right: 24px; bottom: 24px; }
   .corridor-detail { width: min(385px, 65%); }
-  .corridor-atlas-note { max-width: 190px; }
 }
 @media (max-width: 650px) {
   .corridor-section { padding: 28px 20px 62px; }
@@ -198,10 +193,6 @@
   .corridor-detail h3 { font-size: 30px; }
   .corridor-detail p { font-size: 17px; line-height: 1.75; }
   .corridor-detail-focus { font-size: 12px; line-height: 1.7; }
-  .corridor-atlas-note { max-width: none; padding: 25px 8px 0; text-align: left; display: flex; gap: 22px; justify-content: space-between; align-items: center; }
-  .corridor-atlas-note > span { font-size: 12px; letter-spacing: .06em; white-space: nowrap; }
-  .corridor-atlas-note i { margin-inline: 4px; }
-  .corridor-atlas-note p { margin: 0; max-width: 175px; text-align: right; font-size: 12px; line-height: 1.65; }
 }
 .corridor-section[data-motion=paused] .corridor-control,
 .corridor-section[data-motion=paused] .corridor-location-halo { transition: none; }

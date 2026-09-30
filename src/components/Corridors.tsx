@@ -124,7 +124,6 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
               </motion.div>
             </AnimatePresence>
           </div>
-          <div className="corridor-atlas-note"><span>GULF <i aria-hidden="true">↔</i> ASIA</span><p>A perspective shaped by experience.<br />An outlook without borders.</p></div>
         </div>
       </motion.div>
     </section>

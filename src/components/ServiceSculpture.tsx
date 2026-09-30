@@ -30,18 +30,18 @@ function portal(width: number, height: number, border: number, depth: number) {
   return geometry;
 }
 
-type Props = { progress: MotionValue<number>; chapter: number; pinned: boolean; reducedMotion: boolean };
+type Props = { progress: MotionValue<number>; chapter: number; scrollDriven: boolean; reducedMotion: boolean };
 
-export default function ServiceSculpture({ progress, chapter, pinned, reducedMotion }: Props) {
+export default function ServiceSculpture({ progress, chapter, scrollDriven, reducedMotion }: Props) {
   const host = useRef<HTMLDivElement>(null);
-  const settings = useRef({ chapter, pinned, reducedMotion });
+  const settings = useRef({ chapter, scrollDriven, reducedMotion });
   const invalidate = useRef<() => void>(() => {});
   const [unavailable, setUnavailable] = useState(false);
 
   useEffect(() => {
-    settings.current = { chapter, pinned, reducedMotion };
+    settings.current = { chapter, scrollDriven, reducedMotion };
     invalidate.current();
-  }, [chapter, pinned, reducedMotion]);
+  }, [chapter, scrollDriven, reducedMotion]);
 
   useEffect(() => {
     const element = host.current!;
@@ -132,7 +132,7 @@ export default function ServiceSculpture({ progress, chapter, pinned, reducedMot
       if (!visible || document.hidden) return;
       const current = settings.current;
       if (current.reducedMotion && !wasReduced) frozenPose = pose;
-      if (current.reducedMotion && !current.pinned && previousChapter !== current.chapter) frozenPose = current.chapter / 2;
+      if (current.reducedMotion && !current.scrollDriven && previousChapter !== current.chapter) frozenPose = current.chapter / 2;
       const target = current.reducedMotion ? frozenPose : progress.get();
       const delta = lastTime ? Math.min((time - lastTime) / 1000, .05) : 1 / 60;
       pose = current.reducedMotion || !rendered ? target : THREE.MathUtils.lerp(pose, target, 1 - Math.exp(-delta * 12));

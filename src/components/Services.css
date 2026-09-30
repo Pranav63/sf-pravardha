@@ -95,39 +95,32 @@
   .service-scroll-hint { gap: 10px; font-size: 8px; }
 }
 
-@media (max-width: 959px) {
-  .service-stage { display: flex; flex-direction: column; padding: 65px 6% 36px; }
-  .service-stage-heading { padding-bottom: 32px; }
-  .service-scene { order: 2; grid-template-columns: 1fr; gap: 20px; }
-  .service-detail { max-width: 640px; }
-  .service-detail h3 { font-size: 66px; }
-  .service-description { max-width: 540px; }
-  .service-visual { min-height: 430px; width: min(100%, 680px); justify-self: center; }
-  .service-controls-row { order: 1; display: block; margin-top: 0; margin-bottom: 29px; }
-  .service-controls { width: 100%; }
-  .service-controls .service-button { white-space: normal; }
-  .service-scroll-hint { justify-content: center; margin-top: 22px; font-size: 9px; }
-  .service-progress { order: 3; }
+/* Native mobile reading flow, with a single shared 3D backdrop. */
+.service-track--mobile { overflow: clip; }
+.service-mobile { position: relative; isolation: isolate; padding-bottom: 40px; }
+.mobile-service-world { position: sticky; top: 90px; height: calc(100svh - 90px); margin-bottom: calc(90px - 100svh); pointer-events: none; overflow: hidden; z-index: -1; }
+.mobile-service-world .service-sculpture { inset: -70px -22% 95px 12%; opacity: .72; }
+.mobile-service-world::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #f5f3ed99, #f5f3ed40 65%, #f5f3ed00), linear-gradient(180deg, #f5f3ed 0%, #f5f3ed00 17%, #f5f3ed30 42%, #f5f3edd9 74%, #f5f3ed 100%); }
+.mobile-service-heading { position: relative; margin: 0 6%; padding: 26px 0 0; border-top: 1px solid #123e3229; display: flex; justify-content: space-between; align-items: baseline; gap: 20px; }
+.mobile-service-heading h2 { font: 600 11px/1.5 var(--sans); letter-spacing: .13em; }
+.mobile-service-heading > span { max-width: 160px; text-align: right; font-size: 12px; line-height: 1.5; color: #53695e; }
+.mobile-service-chapter { position: relative; min-height: max(650px, 86svh); display: flex; align-items: center; padding: 55px 6% 45px; scroll-margin-top: 100px; }
+.mobile-service-copy { width: 100%; max-width: 600px; margin-inline: auto; }
+.mobile-service-label { display: flex; align-items: baseline; gap: 13px; font-size: 13px; font-weight: 600; color: #365744; }
+.mobile-service-label > span { font: italic 400 29px/1 var(--serif); color: #8a754c; }
+.mobile-service-chapter h3 { position: relative; margin: 24px 0 0; max-width: 590px; font: 400 clamp(42px, 9.9vw, 66px)/1.02 var(--serif); letter-spacing: -.035em; white-space: pre-line; text-wrap: balance; text-shadow: 0 2px 15px #f5f3ede6; }
+.mobile-service-description { position: relative; max-width: 530px; margin-top: 25px; font-size: 17px; line-height: 1.75; color: #304e3f; text-shadow: 0 0 10px var(--cream), 0 0 3px var(--cream); }
+.mobile-service-chapter .service-inclusions { display: grid; gap: 9px; margin: 24px 0 0; padding: 0; list-style: none; }
+.mobile-service-chapter .service-inclusions li { font-size: 14px; line-height: 1.6; color: #304e3f; }
+.mobile-service-chapter .service-enquiry { min-height: 44px; margin-top: 24px; font-size: 14px; }
+@media (min-width: 600px) and (max-width: 959px) {
+  .mobile-service-world .service-sculpture { inset: -70px -10% 80px 20%; }
+  .mobile-service-chapter { min-height: 76svh; }
 }
-
-@media (max-width: 600px) {
-  .service-stage { padding: 42px 6% 30px; }
-  .service-stage-heading { align-items: flex-start; gap: 20px; padding-top: 19px; padding-bottom: 28px; }
-  .service-stage-heading h2 { font-size: 10px; white-space: nowrap; }
-  .service-stage-heading > span { max-width: 133px; font-size: 11px; line-height: 1.5; text-align: right; }
-  .service-label { font-size: 9px; letter-spacing: .08em; margin-bottom: 17px; }
-  .service-detail h3 { font-size: clamp(40px, 11.3vw, 54px); }
-  .service-description { font-size: 16px; line-height: 1.7; margin-top: 22px; }
-  .service-detail .service-inclusions { gap: 10px; margin-top: 23px; }
-  .service-inclusions li { font-size: 14px; line-height: 1.6; }
-  .service-enquiry { font-size: 13px; margin-top: 20px; }
-  .service-visual { min-height: 300px; margin-top: 7px; }
-  .service-visual-note { font-size: 7px; top: 15px; }
-  .service-visual-caption { left: 8px; right: 8px; bottom: 5px; }
-  .service-visual-caption > span:first-child { font-size: 41px; }
-  .service-controls { border-radius: 24px; padding: 5px; gap: 3px; }
-  .service-controls .service-button { flex-direction: column; gap: 5px; min-height: 77px; padding: 10px 7px; border-radius: 20px; font-size: 11px; line-height: 1.45; text-align: center; }
-  .service-button-number { font-size: 9px; }
+@media (max-width: 359px) {
+  .mobile-service-chapter { padding-inline: 6%; }
+  .mobile-service-chapter h3 { font-size: 40px; }
+  .mobile-service-description { font-size: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

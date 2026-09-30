@@ -12,6 +12,7 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
   const buttons = useRef<Array<HTMLButtonElement | null>>([]);
   const [active, setActive] = useState(0);
   const [largeScreen, setLargeScreen] = useState(false);
+  const [mobile, setMobile] = useState(() => window.matchMedia('(max-width: 959px)').matches);
   const systemReducedMotion = useReducedMotion();
   const reduce = reducedMotion ?? Boolean(systemReducedMotion);
   // Preserve the track when motion is paused mid-scene to avoid a page jump.
@@ -24,19 +25,21 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
 
   useEffect(() => {
     const media = window.matchMedia('(min-width: 960px) and (min-height: 760px)');
-    const update = () => setLargeScreen(media.matches);
+    const compact = window.matchMedia('(max-width: 959px)');
+    const update = () => { setLargeScreen(media.matches); setMobile(compact.matches); };
     update();
     media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
+    compact.addEventListener('change', update);
+    return () => { media.removeEventListener('change', update); compact.removeEventListener('change', update); };
   }, []);
 
   const { scrollYProgress } = useScroll({ target: track, offset: ['start 90px', 'end end'] });
   const { scrollYProgress: visualProgress } = useScroll({ target: visualRef, offset: ['start end', 'end start'] });
-  const sculptureProgress = useTransform(() => pinned ? scrollYProgress.get() : active * .35 + visualProgress.get() * .3);
+  const sculptureProgress = useTransform(() => pinned || mobile ? scrollYProgress.get() : active * .35 + visualProgress.get() * .3);
   const progress = useTransform(scrollYProgress, [0, 1], [0.04, 1]);
 
   useMotionValueEvent(scrollYProgress, 'change', (value) => {
-    if (pinned) setActive(Math.min(services.length - 1, Math.floor(value * services.length)));
+    if (pinned || mobile) setActive(Math.min(services.length - 1, Math.floor(value * services.length)));
   });
 
   function selectChapter(index: number) {
@@ -59,6 +62,28 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
     selectChapter(next);
     buttons.current[next]?.focus({ preventScroll: true });
   }
+
+  if (mobile) return (
+    <section ref={track} id="expertise" className="expertise service-track service-track--mobile" aria-labelledby="expertise-title">
+      <div className="service-mobile" data-testid="service-stage" data-active={active}>
+        <div ref={visualRef} className="mobile-service-world" aria-hidden="true">
+          {nearViewport && <Suspense fallback={null}><ServiceSculpture progress={sculptureProgress} chapter={active} scrollDriven reducedMotion={reduce} /></Suspense>}
+        </div>
+        <div className="mobile-service-heading"><h2 id="expertise-title">OUR EXPERTISE</h2><span>Three perspectives. One way forward.</span></div>
+        {services.map((item) => (
+          <article key={item.id} id={`service-${item.id}`} className="mobile-service-chapter" aria-labelledby={`service-${item.id}-title`}>
+            <div className="mobile-service-copy">
+              <p className="mobile-service-label"><span>{item.number}</span>{item.title}</p>
+              <h3 id={`service-${item.id}-title`}>{item.heading}</h3>
+              <p className="mobile-service-description">{item.description}</p>
+              <ul className="service-inclusions">{item.details.map(detail => <li key={detail}>{detail}</li>)}</ul>
+              <a className="service-enquiry" href={`mailto:${company.email}?subject=${encodeURIComponent(`Discuss ${item.title.toLowerCase()} — Pravardha Advisors`)}`}>Discuss your requirements</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
 
   return (
     <section ref={track} id="expertise" className={`expertise service-track${pinned ? ' service-track--pinned' : ''}`} aria-labelledby="expertise-title">
@@ -97,7 +122,7 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
           <div ref={visualRef} className="service-visual" aria-hidden="true">
             <div className="service-visual-corners"><span /><span /><span /><span /></div>
             <span className="service-visual-note">A CONNECTED PERSPECTIVE</span>
-            {nearViewport && <Suspense fallback={null}><ServiceSculpture progress={sculptureProgress} chapter={active} pinned={pinned} reducedMotion={reduce} /></Suspense>}
+            {nearViewport && <Suspense fallback={null}><ServiceSculpture progress={sculptureProgress} chapter={active} scrollDriven={pinned} reducedMotion={reduce} /></Suspense>}
             <div className="service-visual-caption">
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.span key={visual} initial={reduce ? false : { y: 28, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -28, opacity: 0 }} transition={{ duration: reduce ? 0 : 0.5 }}>{visual}<i>.</i></motion.span>
