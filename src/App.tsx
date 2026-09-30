@@ -66,7 +66,6 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
       <motion.div initial={reducedMotion ? false : { opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9, delay: .45, ease }}><p className="hero-description">{company.hero.description}</p><a className="button button-dark" href="#expertise">Discover our expertise</a></motion.div>
     </motion.div>
     <motion.a className="hero-glass-note glass" href="#perspective" initial={reducedMotion ? false : { opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, delay: .7, ease }}><span className="note-orbit" aria-hidden="true"><i /><i /><i /></span><span>Rooted in the Gulf.<strong>Connected to opportunity.</strong></span></motion.a>
-    <div className="hero-bottom"><span>UAE BASED. INTERNATIONALLY MINDED.</span><a href="#introduction">Scroll to explore <span className="scroll-cue" aria-hidden="true" /></a></div>
     <motion.div className="hero-progress" style={{ scaleX: reducedMotion ? 0 : progress }} />
   </section>;
 }
