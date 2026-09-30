@@ -44,9 +44,8 @@
 .service-detail .service-inclusions { display: grid; gap: 10px; margin: 25px 0 0; padding: 0; list-style: none; }
 .service-inclusions li { display: flex; align-items: baseline; gap: 11px; font-size: 15px; line-height: 1.55; color: #415c4f; }
 .service-inclusions li::before { content: ''; flex: 0 0 5px; width: 5px; height: 5px; background: var(--gold); border-radius: 50%; }
-.service-enquiry { position: relative; display: inline-flex; align-items: center; gap: 27px; margin-top: 27px; padding: 8px 0 9px; font-size: 14px; border-bottom: 1px solid #123e3280; }
-.service-enquiry > span { font-size: 24px; line-height: 1; transition: transform .25s ease; }
-.service-enquiry:hover > span { transform: translate(3px, -3px); }
+.service-enquiry { position: relative; display: inline-flex; align-items: center; margin-top: 27px; padding: 8px 0 9px; font-size: 14px; border-bottom: 1px solid #123e3280; transition: color .25s, border-color .25s; }
+.service-enquiry:hover { color: #4f6d55; border-color: #7b9477; }
 .service-visual { position: relative; align-self: stretch; min-height: 470px; isolation: isolate; }
 .service-visual-note { position: absolute; z-index: 2; top: 19px; right: 14px; font: 600 9px/1.5 var(--sans); letter-spacing: .17em; color: #748676; }
 .service-visual-corners { position: absolute; inset: 4% 1% 9%; pointer-events: none; }
@@ -65,15 +64,15 @@
 .service-visual-number { font: 400 29px/1 var(--serif); color: #526e5f; white-space: nowrap; }
 .service-visual-number small { font: 10px/1.3 var(--sans); color: #7c8a7f; letter-spacing: .1em; }
 .service-controls-row { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-top: 35px; padding-top: 15px; }
-.service-controls { position: relative; display: flex; padding: 6px; border-radius: 100px; border: 1px solid #fff9; background: linear-gradient(150deg, #ffffffe6, #e4e9e09c); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); box-shadow: inset 0 1px 1px #fff, inset 0 -1px 1px #123e3220, 0 8px 27px #123e320d, 0 2px 5px #123e3205; }
-.service-controls .service-button { position: relative; display: flex; flex: 1; width: auto; min-height: 51px; align-items: center; justify-content: center; gap: 11px; padding: 12px 21px; border: 0; border-radius: 100px; background: none; font: 500 13px/1.3 var(--sans); color: #5b7162; white-space: nowrap; transition: color .25s; }
+.service-controls { position: relative; display: flex; padding: 6px; border-radius: 100px; border: 1px solid #fff9; background: linear-gradient(135deg, #fffffff0, #e7ece2a6 48%, #fafaf0c7); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); box-shadow: inset 1px 1px 1px #fff, inset -1px -1px 1px #9baf9638, 0 3px 6px #123e3206, 0 14px 32px -10px #123e3226; }
+.service-controls .service-button { position: relative; display: flex; flex: 1; width: auto; min-height: 51px; align-items: center; justify-content: center; gap: 11px; padding: 12px 21px; border: 0; border-radius: 100px; background: none; font: 500 13px/1.3 var(--sans); color: #5b7162; white-space: nowrap; transition: color .25s, background .25s; }
 .service-controls .service-button > span:not(.service-selection) { position: relative; z-index: 1; }
-.service-controls .service-button:hover { color: var(--forest); }
+.service-controls .service-button:hover { color: var(--forest); background: #ffffff40; }
+.service-controls .service-button:active { background: #ffffff80; }
 .service-controls .service-button.active { color: #fff; }
-.service-controls .service-button .service-selection { position: absolute; inset: 0; border-radius: inherit; background: var(--forest); box-shadow: 0 3px 8px #123e3226, inset 0 1px 0 #ffffff20; }
+.service-controls .service-button .service-selection { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(145deg, #315c4a, #123e32e8); box-shadow: 0 3px 8px #123e3226, inset 1px 1px 1px #ffffff45, inset -1px -1px 1px #06251c45; }
 .service-button-number { font-size: 10px; opacity: .65; }
 .service-scroll-hint { display: flex; align-items: center; gap: 23px; font-size: 9px; line-height: 1.4; letter-spacing: .12em; color: #6e7e71; }
-.service-scroll-hint > span { font-size: 21px; }
 .service-progress { height: 1px; background: #123e3214; margin-top: 24px; }
 .service-progress > span { display: block; height: 1px; background: #b19c6b; transform-origin: left; }
 
@@ -132,5 +131,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .service-enquiry > span, .service-controls .service-button { transition: none; }
+  .service-enquiry, .service-controls .service-button { transition: none; }
 }

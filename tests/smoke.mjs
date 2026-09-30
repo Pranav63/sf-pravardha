@@ -36,6 +36,14 @@ const identityTransform = (locator) => locator.evaluate((element) => {
   return transform === 'none' || new DOMMatrixReadOnly(transform).isIdentity;
 });
 
+async function checkCleanControls(page) {
+  await expect(page.getByRole('button', { name: /(?:Pause|Play) motion/ })).toHaveCount(0);
+  const decoratedControls = await page.locator('button, a').evaluateAll((elements) => elements
+    .filter((element) => element.querySelector('.arrow') || /[↗↑↓→]/u.test(element.textContent))
+    .map((element) => element.textContent.trim() || element.getAttribute('aria-label')));
+  assert.deepEqual(decoratedControls, [], 'Buttons and links must keep clean, arrow-free labels.');
+}
+
 try {
   for (let attempt = 0; ; attempt++) {
     if (server.exitCode !== null) throw new Error(`Preview server stopped: ${serverOutput}`);
@@ -53,6 +61,7 @@ try {
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('#approach')).toHaveCount(0);
   await expect(page.locator('#intro-title')).toContainText('Ambition opens doors.');
+  await checkCleanControls(page);
   assert.match(await page.title(), /Pravardha/);
   await expect.poll(() => page.locator('.hero-art img').evaluate((img) => img.complete && img.naturalWidth > 0)).toBe(true);
   await expect.poll(() => identityTransform(page.locator('.hero-line > span').last())).toBe(true);
@@ -98,20 +107,20 @@ try {
   assert.ok(!sculptureImages[0].equals(sculptureImages[1]), 'Different angles must visibly change the rendered sculpture.');
 
   const pausedPosition = await page.locator('#expertise').evaluate((section) => ({ y: window.scrollY, height: section.offsetHeight }));
-  await page.getByRole('button', { name: 'Pause motion', exact: true }).click();
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'reduced');
   const pausedAfter = await page.locator('#expertise').evaluate((section) => ({ y: window.scrollY, height: section.offsetHeight }));
-  assert.ok(Math.abs(pausedAfter.y - pausedPosition.y) <= 2, 'Pausing motion must preserve the current scroll position.');
-  assert.equal(pausedAfter.height, pausedPosition.height, 'Pausing motion must preserve the established scroll track.');
+  assert.ok(Math.abs(pausedAfter.y - pausedPosition.y) <= 2, 'Changing the OS motion preference must preserve the current scroll position.');
+  assert.equal(pausedAfter.height, pausedPosition.height, 'Changing the OS motion preference must preserve the established scroll track.');
   await expect(page.getByTestId('service-stage')).toHaveAttribute('data-active', '2');
   await serviceChapter(page, .5, 1);
   await page.waitForTimeout(300);
-  assert.equal(Number(await sculpture.getAttribute('data-yaw')), sculptureViews[2].yaw, 'Pausing must freeze the 3D angle even when scrolling across chapter boundaries.');
+  assert.equal(Number(await sculpture.getAttribute('data-yaw')), sculptureViews[2].yaw, 'Reduced motion must freeze the 3D angle even when scrolling across chapter boundaries.');
 
   await page.locator('.corridor-geography').scrollIntoViewIfNeeded();
   await expect(page.locator('#perspective')).toHaveAttribute('data-motion', 'paused');
   await expect(page.locator('#perspective animateMotion')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Play motion', exact: true }).click();
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'full');
   await expect(page.locator('#perspective')).toHaveAttribute('data-motion', 'running');
   await expect(page.locator('#perspective animateMotion')).toHaveCount(6);
@@ -204,6 +213,7 @@ try {
   const menu = page.locator('.menu-toggle');
   await menu.click();
   await expect(menu).toHaveAttribute('aria-expanded', 'true');
+  await checkCleanControls(page);
   await page.keyboard.press('Escape');
   await expect(menu).toHaveAttribute('aria-expanded', 'false');
   await expect(menu).toBeFocused();
@@ -232,12 +242,13 @@ try {
   await expect.poll(() => identityTransform(page.locator('.hero-line > span').last())).toBe(true);
   await page.screenshot({ path: 'test-results/mobile-hero.png' });
 
-  // OS preference changes are observed live; an explicit Play choice can override them.
+  // Motion runs by default and follows live OS preference changes without a site override.
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'reduced');
   await expect.poll(() => identityTransform(page.getByTestId('hero-art'))).toBe(true);
   await goTo(page, 300);
-  await page.getByRole('button', { name: 'Play motion', exact: true }).click();
+  await checkCleanControls(page);
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'full');
 
   const reducedContext = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
@@ -263,7 +274,7 @@ try {
   await reducedPage.screenshot({ path: 'test-results/desktop-reduced-full.png', fullPage: true });
   await reducedContext.close();
   assert.deepEqual(errors, [], `Browser errors: ${errors.join('\n')}`);
-  console.log('PASS: live 3D rotation with stable framing, idle rendering and pause continuity; hero/map motion, scroll chapters, service and regional controls, keyboard navigation, shorter page, word spacing, contact links, mobile menu, five viewport widths, readable type, reduced motion, and browser/network checks.');
+  console.log('PASS: live 3D rotation with stable framing, idle rendering and OS motion continuity; hero/map motion, scroll chapters, clean arrow-free controls, keyboard navigation, shorter page, word spacing, contact links, mobile menu, five viewport widths, readable type, reduced motion, and browser/network checks.');
 } finally {
   await browser?.close();
   server.kill();

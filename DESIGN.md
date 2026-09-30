@@ -10,7 +10,9 @@ The revised experience combines continuous scroll-linked hero transforms, a pinn
 
 Expertise uses a live Three.js sculpture of architectural portals in glass and champagne brass. Its center stays fixed while scrolling rotates the actual geometry around its vertical axis, revealing new faces, openings and material reflections. The renderer loads when the section approaches. The generated hero image remains unchanged.
 
-A visible motion control pauses both scroll transforms and continuous effects. The initial preference respects the operating system. An explicit Play motion selection can override it. Short viewports, mobile screens and an initially reduced-motion preference use service selection without a long sticky track. Pausing after scrolling begins preserves the track height to avoid moving the reader elsewhere on the page.
+Motion runs by default and respects live changes to the operating system's reduced-motion preference. The floating motion toggle has been removed. Short viewports, mobile screens and an initially reduced-motion preference use service selection without a long sticky track. Enabling reduced motion after scrolling begins preserves the track height to avoid moving the reader elsewhere on the page.
+
+The introduction's framed monogram is replaced by a borderless moving light ribbon. Buttons use clean text labels without arrows. Glass styling remains concentrated on floating navigation and controls, with directional highlights, softer depth and restrained press feedback. Navigation takes a dark green tint over the map and contact sections; opening its mobile menu adds frosting for legibility. Active selections use simple fills within the material instead of stacking glass layers, following Apple's Liquid Glass guidance.
 
 ## Research references
 

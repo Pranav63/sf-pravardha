@@ -28,7 +28,7 @@ npm run test:e2e
 
 Browser tests start their own production preview. Google Chrome must be installed. For bundled Chromium, run `npx playwright install chromium`, then `CHROME_CHANNEL=chromium npm run test:e2e`.
 
-The tests cover visible 3D rotation and stable framing, headline spacing, scroll-driven service chapters, moving map routes, selectors, keyboard controls, the motion toggle, reduced motion and mobile layouts. Screenshots go into the ignored `test-results/` folder.
+The tests cover visible 3D rotation and stable framing, headline spacing, scroll-driven service chapters, moving map routes, clean arrow-free controls, keyboard navigation, live OS motion preferences and mobile layouts. Screenshots go into the ignored `test-results/` folder.
 
 ## Edit content
 
@@ -43,9 +43,9 @@ Enquiry links open the visitor's email application addressed to `parulgupta@hotm
 
 ## Motion
 
-Desktop services advance with scrolling and can also be selected directly. On mobile, short screens and an initially reduced-motion preference, visitors select services without a long pinned section. Pausing after a scroll scene has started preserves the track to prevent a page jump. The floating Play/Pause motion control overrides the system preference for the current visit.
+Motion runs by default and follows the visitor's operating-system reduced-motion preference, including changes during a visit. There is no separate motion toggle. Desktop services advance with scrolling and can also be selected directly. On mobile, short screens and an initially reduced-motion preference, visitors select services without a long pinned section. Enabling reduced motion after a scroll scene has started preserves the track to prevent a page jump.
 
-[Design references](DESIGN.md) document the visual direction. The original hero is retained. The expertise sculpture is live Three.js geometry, loaded as its section approaches; scrolling rotates the object around its vertical axis while its center stays anchored. Navigation and controls use CSS glass materials, with a solid fallback for browsers without backdrop blur.
+[Design references](DESIGN.md) document the visual direction. The original hero is retained. The expertise sculpture is live Three.js geometry, loaded as its section approaches; scrolling rotates the object around its vertical axis while its center stays anchored. A borderless moving light ribbon accompanies the introduction. Navigation and controls use CSS glass materials with layered highlights and press feedback, plus a solid fallback for browsers without backdrop blur.
 
 The 3D module adds approximately 144 kB compressed, deferred until expertise approaches the viewport. It renders only while its angle is changing, stops offscreen, and caps pixel density. Mobile scrolling adds a gentler turn alongside service selection. Browsers without WebGL show a simple portal outline.
 

@@ -90,7 +90,7 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
               </AnimatePresence>
             </div>
             <a className="service-enquiry" href={`mailto:${company.email}?subject=${encodeURIComponent(`Discuss ${service.title.toLowerCase()} — Pravardha Advisors`)}&body=${encodeURIComponent(`Hello Parul,\n\nI would like to discuss ${service.title.toLowerCase()}.\n\n`)}`}>
-              Discuss your requirements <span aria-hidden="true">↗</span>
+              Discuss your requirements
             </a>
           </div>
 
@@ -125,7 +125,7 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
               </button>
             ))}
           </div>
-          <span className="service-scroll-hint">{pinned ? 'SCROLL TO EXPLORE' : 'SELECT A PERSPECTIVE'}<span aria-hidden="true">{pinned ? '↓' : '↗'}</span></span>
+          <span className="service-scroll-hint">{pinned ? 'SCROLL TO EXPLORE' : 'SELECT A PERSPECTIVE'}</span>
         </div>
         <div className="service-progress" aria-hidden="true"><motion.span style={{ scaleX: pinned ? progress : (active + 1) / services.length }} /></div>
       </div>

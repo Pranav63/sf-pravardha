@@ -90,10 +90,10 @@
   padding: 5px;
   border: 1px solid #dfeadb2c;
   border-radius: 100px;
-  background: linear-gradient(160deg, #e9f1dc13, #bfd9ca07);
+  background: linear-gradient(145deg, #e9f1dc29, #bfd9ca0a 50%, #eff5db18);
   -webkit-backdrop-filter: blur(20px);
   backdrop-filter: blur(20px);
-  box-shadow: inset 0 1px 0 #ffffff13, 0 8px 26px #00000014;
+  box-shadow: inset 1px 1px 1px #ffffff42, inset -1px -1px 1px #8db09812, 0 12px 28px -8px #00000030;
 }
 .corridor-control {
   position: relative;
@@ -114,7 +114,7 @@
 .corridor-control:hover,
 .corridor-control[aria-pressed=true] { color: #18392c; }
 .corridor-control:hover:not([aria-pressed=true]) { color: #fff9e9; }
-.corridor-control-active { position: absolute; z-index: -1; inset: 0; border-radius: 100px; background: #e7e9d9; box-shadow: 0 2px 10px #00000018, inset 0 1px 0 #fff; }
+.corridor-control-active { position: absolute; z-index: -1; inset: 0; border-radius: 100px; background: linear-gradient(140deg, #f8f8e9, #d4dfcbdc); box-shadow: 0 3px 12px #00000025, inset 1px 1px 1px #fff; }
 .corridor-control:focus-visible { outline: 2px solid #e8d6a5; outline-offset: 5px; }
 .corridor-region-title { position: absolute; z-index: 1; left: 36px; top: 136px; pointer-events: none; }
 .corridor-region-title > span { display: block; color: #91a697; font: 500 12px/1.6 var(--sans, 'Manrope', sans-serif); letter-spacing: .12em; }

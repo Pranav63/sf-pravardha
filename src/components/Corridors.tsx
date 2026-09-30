@@ -70,7 +70,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
           <div className="corridor-controls" role="group" aria-label="Explore our regional perspective">
             {perspectives.map((item, index) => (
               <button key={item.name} type="button" className="corridor-control" aria-pressed={selected === index} onClick={() => setSelected(index)}>
-                {selected === index && <motion.span className="corridor-control-active" layoutId="atlas-active-region" transition={transition} />}
+                {selected === index && <motion.span className="corridor-control-active" layoutId="atlas-active-region" transition={quiet ? { duration: 0 } : { type: 'spring', stiffness: 360, damping: 32 }} />}
                 <span>{item.short}</span>
               </button>
             ))}
