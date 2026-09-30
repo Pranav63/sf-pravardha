@@ -2,6 +2,8 @@
 
 An advisory website built with React, TypeScript, Vite, Motion and Three.js. Local artwork and fonts; no backend or environment variables.
 
+Live website: [sf-pravardha.vercel.app](https://sf-pravardha.vercel.app).
+
 ## Local development
 
 Use Node.js 22.12 or later and npm.
@@ -51,7 +53,7 @@ The 3D module adds approximately 144 kB compressed, deferred until expertise app
 
 ## Vercel
 
-Import `Pranav63/sf-pravadha` and select:
+Import `Pranav63/sf-pravardha` and select:
 
 | Setting | Value |
 | --- | --- |
