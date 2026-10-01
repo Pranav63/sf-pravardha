@@ -97,9 +97,11 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
 function Perspective({ reducedMotion }: { reducedMotion: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start .85', 'end .3'] });
-  const rearX = useTransform(scrollYProgress, [0, 1], [-16, 10]);
-  const frontX = useTransform(scrollYProgress, [0, 1], [16, -10]);
-  const lift = useTransform(scrollYProgress, [0, 1], [10, -8]);
+  const contours = (opening: number) => Array.from({ length: 34 }, (_, index) => {
+    const i = index * 41 / 33;
+    return `M38 ${220 + i * 1.15}C128 ${268 - i * (5.4 + opening * .9)} 212 ${20 + i * 4 - opening * 65} 291 ${98 + i * 4.3}S435 ${279 - i * 4.3 - opening * 24} 486 ${143 + i * 3.3}`;
+  }).join(' ');
+  const field = useTransform(scrollYProgress, [0, 1], [contours(0), contours(1)]);
   const words = ['Ambition', 'opens', 'doors.'];
   return <section className="manifesto" id="introduction" ref={ref} aria-labelledby="intro-title">
     <div className="manifesto-layout">
@@ -109,29 +111,13 @@ function Perspective({ reducedMotion }: { reducedMotion: boolean }) {
         <p className="manifesto-description">{company.introduction.text}</p>
       </div>
       <div className="perspective-art" aria-hidden="true">
-        <svg className="perspective-portals" viewBox="0 0 520 390" fill="none">
+        <svg className="perspective-flow" viewBox="0 55 520 285" fill="none">
           <defs>
-            <linearGradient id="perspective-jade" x1="140" y1="70" x2="310" y2="285" gradientUnits="userSpaceOnUse"><stop stopColor="#b5d0bb" stopOpacity=".8" /><stop offset=".45" stopColor="#477d65" stopOpacity=".8" /><stop offset="1" stopColor="#194d3c" stopOpacity=".95" /></linearGradient>
-            <linearGradient id="perspective-brass" x1="238" y1="120" x2="390" y2="335" gradientUnits="userSpaceOnUse"><stop stopColor="#f2e7c9" /><stop offset=".4" stopColor="#baa16a" stopOpacity=".9" /><stop offset=".75" stopColor="#e4d8b8" stopOpacity=".85" /><stop offset="1" stopColor="#9e8759" /></linearGradient>
-            <linearGradient id="perspective-edge"><stop stopColor="#fffdf3" /><stop offset="1" stopColor="#afc3ac" stopOpacity=".25" /></linearGradient>
-            <radialGradient id="perspective-shadow"><stop stopColor="#244d36" stopOpacity=".18" /><stop offset="1" stopColor="#244d36" stopOpacity="0" /></radialGradient>
+            <linearGradient id="perspective-ink" x1="38" y1="230" x2="486" y2="150" gradientUnits="userSpaceOnUse"><stop stopColor="#315c49" stopOpacity="0" /><stop offset=".16" stopColor="#315c49" stopOpacity=".8" /><stop offset=".25" stopColor="#315c49" /><stop offset=".65" stopColor="#718966" /><stop offset=".85" stopColor="#a88c51" stopOpacity=".8" /><stop offset="1" stopColor="#a88c51" stopOpacity="0" /></linearGradient>
+            <radialGradient id="perspective-light"><stop stopColor="#e7ddbb" stopOpacity=".6" /><stop offset="1" stopColor="#f5f3ed" stopOpacity="0" /></radialGradient>
           </defs>
-          <ellipse cx="267" cy="347" rx="195" ry="27" fill="url(#perspective-shadow)" />
-          <path d="M81 317L283 263L437 302L234 357Z" fill="#e8e9df" stroke="#d6ddce" />
-          <motion.g style={reducedMotion ? undefined : { x: rearX }}>
-            <path d="M140 285V90L310 45V240ZM174 244L279 217V85L174 113Z" fill="url(#perspective-jade)" fillRule="evenodd" />
-            <path d="M310 45L325 54V249L310 240Z" fill="#34634d" fillOpacity=".75" />
-            <path d="M140 285L155 294L325 249L310 240Z" fill="#799d81" fillOpacity=".8" />
-            <path d="M174 113L188 121V240L174 244Z" fill="#c0d2bd" fillOpacity=".6" />
-            <path d="M141 284V91L310 46M174 244V113L279 85" stroke="url(#perspective-edge)" strokeWidth="1.5" />
-          </motion.g>
-          <motion.g style={reducedMotion ? undefined : { x: frontX, y: lift }}>
-            <path d="M238 313V118L390 151V346ZM267 280L359 301V176L267 155Z" fill="url(#perspective-brass)" fillRule="evenodd" />
-            <path d="M390 151L405 142V337L390 346Z" fill="#99875e" fillOpacity=".85" />
-            <path d="M238 118L253 109L405 142L390 151Z" fill="#e8debf" />
-            <path d="M267 155L280 149L359 167V176Z" fill="#aa9466" />
-            <path d="M239 313V119L390 152M267 280V155L359 176" stroke="#fff9e1" strokeOpacity=".8" strokeWidth="1.5" />
-          </motion.g>
+          <ellipse cx="280" cy="200" rx="220" ry="145" fill="url(#perspective-light)" />
+          <motion.path className="perspective-contours" d={reducedMotion ? contours(.5) : field} stroke="url(#perspective-ink)" strokeWidth="1" strokeLinecap="round" />
         </svg>
       </div>
     </div>

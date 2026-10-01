@@ -78,7 +78,7 @@ h1 em { font-weight: 400; color: #648268; }
 .manifesto h2 em { display: block; color: #607858; }
 .manifesto-description { max-width: 570px; margin-top: 28px; font-size: 18px; line-height: 1.8; color: #50654e; }
 .perspective-art { position: relative; width: 100%; max-width: 520px; justify-self: center; background: radial-gradient(ellipse at center, #e0e8db80, transparent 67%); }
-.perspective-portals { display: block; width: 100%; height: auto; overflow: visible; }
+.perspective-flow { display: block; width: 100%; height: auto; overflow: visible; }
 
 .footer { position: relative; padding: 58px 6% 24px; background: linear-gradient(165deg, #e9ede2, var(--cream) 48%); }
 .footer::before { content: ''; position: absolute; top: 0; left: 6%; right: 6%; height: 1px; background: linear-gradient(90deg, transparent, #c1ad7d80, transparent); }
@@ -154,7 +154,7 @@ html:has([data-motion='reduced']) { scroll-behavior: auto; }
   .manifesto h2 { font-size: clamp(43px, 8.7vw, 65px); margin-top: 20px; }
   .manifesto-kicker { font-size: 12px; letter-spacing: .12em; }
   .manifesto-description { font-size: 16px; line-height: 1.75; margin-top: 22px; }
-  .perspective-art { max-width: 310px; }
+  .perspective-art { max-width: 390px; }
   .footer { padding: 28px 6% 20px; }
   .footer-return { width: 48px; height: 48px; }
   .footer-details { display: flex; flex-direction: column; gap: 12px; padding: 18px 0 20px; }
