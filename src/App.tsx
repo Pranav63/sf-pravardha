@@ -1,5 +1,5 @@
-import { Fragment, useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, MotionConfig, useScroll, useSpring, useTransform } from 'motion/react';
+import { Fragment, useEffect, useRef, useState, type RefObject } from 'react';
+import { animate, AnimatePresence, motion, MotionConfig, useInView, useMotionValue, useScroll, useSpring, useTransform } from 'motion/react';
 import { company } from './content';
 import Corridors from './components/Corridors';
 import Services from './components/Services';
@@ -75,8 +75,26 @@ function Header({ reducedMotion, contactOpen, onContact }: { reducedMotion: bool
   </header>;
 }
 
+function useAmbientPhase(ref: RefObject<HTMLElement | null>, reducedMotion: boolean) {
+  const inView = useInView(ref, { amount: .1 });
+  const phase = useMotionValue(0);
+  useEffect(() => {
+    if (!inView || reducedMotion) return;
+    const animation = animate(phase, phase.get() + Math.PI * 2, { duration: 14, ease: 'linear', repeat: Infinity });
+    const visibility = () => { if (document.hidden) animation.pause(); else animation.play(); };
+    visibility();
+    document.addEventListener('visibilitychange', visibility);
+    return () => { animation.stop(); document.removeEventListener('visibilitychange', visibility); };
+  }, [inView, reducedMotion, phase]);
+  return phase;
+}
+
 function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   const ref = useRef<HTMLElement>(null);
+  const phase = useAmbientPhase(ref, reducedMotion);
+  const driftX = useTransform(phase, value => `${Math.sin(value) * 1.2}%`);
+  const driftY = useTransform(phase, value => `${Math.cos(value) * .7}%`);
+  const driftScale = useTransform(phase, value => 1.055 + Math.sin(value) * .01);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '28%']);
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.18]);
@@ -84,7 +102,7 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   const opacity = useTransform(scrollYProgress, [0, .7], [1, .15]);
   const progress = useSpring(scrollYProgress, { stiffness: 100, damping: 25 });
   return <section ref={ref} className="hero" id="home" aria-labelledby="hero-title">
-    <motion.div className="hero-art" data-testid="hero-art" style={reducedMotion ? undefined : { y, scale }}><img src="/images/architecture.jpg" alt="Sculptural emerald glass and champagne metal arches on a stone foundation" width="1536" height="1024" fetchPriority="high" /></motion.div>
+    <motion.div className="hero-art" data-testid="hero-art" style={reducedMotion ? undefined : { y, scale }}><motion.img style={reducedMotion ? undefined : { x: driftX, y: driftY, scale: driftScale }} src="/images/architecture.jpg" alt="Sculptural emerald glass and champagne metal arches on a stone foundation" width="1536" height="1024" fetchPriority="high" /></motion.div>
     <motion.div className="hero-content" style={reducedMotion ? undefined : { y: textY, opacity }}>
       <h1 id="hero-title">{company.hero.title.map((line, index) => <span className="hero-line" key={line}><motion.span initial={reducedMotion ? false : { y: '110%', rotate: 4 }} animate={{ y: 0, rotate: 0 }} transition={{ duration: 1.1, delay: .13 + index * .12, ease }}>{index === 1 ? <em>{line}</em> : line}</motion.span></span>)}</h1>
       <motion.div initial={reducedMotion ? false : { opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9, delay: .45, ease }}><p className="hero-description">{company.hero.description}</p><a className="button button-dark" href="#expertise">Discover our expertise</a></motion.div>
@@ -96,12 +114,15 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
 
 function Perspective({ reducedMotion }: { reducedMotion: boolean }) {
   const ref = useRef<HTMLElement>(null);
+  const phase = useAmbientPhase(ref, reducedMotion);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start .85', 'end .3'] });
-  const contours = (opening: number) => Array.from({ length: 34 }, (_, index) => {
+  const contours = (opening: number, time = 0) => Array.from({ length: 34 }, (_, index) => {
     const i = index * 41 / 33;
-    return `M38 ${220 + i * 1.15}C128 ${268 - i * (5.4 + opening * .9)} 212 ${20 + i * 4 - opening * 65} 291 ${98 + i * 4.3}S435 ${279 - i * 4.3 - opening * 24} 486 ${143 + i * 3.3}`;
+    const wave = Math.sin(time + index * .075);
+    const sway = Math.cos(time + index * .06);
+    return `M38 ${220 + i * 1.15 + wave * 5}C128 ${268 - i * (5.4 + opening * .9) + wave * 18} 212 ${20 + i * 4 - opening * 65 + sway * 24} 291 ${98 + i * 4.3 + wave * 18}S435 ${279 - i * 4.3 - opening * 24 - sway * 18} 486 ${143 + i * 3.3 + wave * 7}`;
   }).join(' ');
-  const field = useTransform(scrollYProgress, [0, 1], [contours(0), contours(1)]);
+  const field = useTransform(() => contours(scrollYProgress.get(), phase.get()));
   const words = ['Ambition', 'opens', 'doors.'];
   return <section className="manifesto" id="introduction" ref={ref} aria-labelledby="intro-title">
     <div className="manifesto-layout">

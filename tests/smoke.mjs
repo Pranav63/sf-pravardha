@@ -110,9 +110,19 @@ try {
   await page.screenshot({ path: 'test-results/desktop-hero.png' });
   await checkContactSheet(page, () => page.locator('.header-contact').click(), page.locator('.header-contact'));
 
+  const heroIdle = await transformOf(page.locator('.hero-art img'));
+  await expect.poll(() => transformOf(page.locator('.hero-art img'))).not.toBe(heroIdle);
+
   const heroTransform = await transformOf(page.getByTestId('hero-art'));
   await goTo(page, 300);
   await expect.poll(() => transformOf(page.getByTestId('hero-art'))).not.toBe(heroTransform);
+
+  await page.locator('.perspective-art').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(300);
+  const introPosition = await page.evaluate(() => scrollY);
+  const idleContour = await page.locator('.perspective-contours').getAttribute('d');
+  await expect.poll(() => page.locator('.perspective-contours').getAttribute('d')).not.toBe(idleContour);
+  assert.equal(await page.evaluate(() => scrollY), introPosition, 'The introduction must flow without scrolling.');
 
   await expect(page.locator('#expertise')).toHaveClass(/service-track--pinned/);
   const sculpture = page.getByTestId('service-sculpture');
@@ -382,6 +392,11 @@ try {
   await expect(reducedPage.locator('#expertise')).not.toHaveClass(/service-track--pinned/);
   assert.ok(await reducedPage.locator('#expertise').evaluate((section) => section.offsetHeight < innerHeight * 1.8), 'Reduced motion must not start with a long pinned service track.');
   await expect.poll(() => identityTransform(reducedPage.getByTestId('hero-art'))).toBe(true);
+  await expect.poll(() => identityTransform(reducedPage.locator('.hero-art img'))).toBe(true);
+  await reducedPage.locator('.perspective-art').scrollIntoViewIfNeeded();
+  const quietContour = await reducedPage.locator('.perspective-contours').getAttribute('d');
+  await reducedPage.waitForTimeout(300);
+  assert.equal(await reducedPage.locator('.perspective-contours').getAttribute('d'), quietContour, 'Reduced motion must keep the contour artwork still.');
   await reducedPage.getByRole('button', { name: /Cross-border trade/ }).click();
   await expect(reducedPage.getByTestId('service-stage')).toHaveAttribute('data-active', '2');
   await expect(reducedPage.locator('#service-detail h3')).toContainText('Different markets.');
@@ -419,7 +434,7 @@ try {
   await expect(reducedPage.locator('.site-header')).toHaveAttribute('data-hidden', 'false');
   await reducedContext.close();
   assert.deepEqual(errors, [], `Browser errors: ${errors.join('\n')}`);
-  console.log('PASS: live 3D rotation with stable framing, idle rendering and OS motion continuity; hero/map motion, scroll chapters, clean arrow-free controls, keyboard navigation, shorter page, word spacing, contact links, native mobile service reading with a rotating 3D backdrop, compact touch-friendly menu, supplied portrait, five viewport widths, readable type, reduced motion, and browser/network checks.');
+  console.log('PASS: live 3D rotation with stable framing, idle rendering and OS motion continuity; continuous hero/contour motion, map motion, scroll chapters, clean arrow-free controls, keyboard navigation, shorter page, word spacing, contact links, native mobile service reading with a rotating 3D backdrop, compact touch-friendly menu, supplied portrait, five viewport widths, readable type, reduced motion, and browser/network checks.');
 } finally {
   await browser?.close();
   server.kill();
