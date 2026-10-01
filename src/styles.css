@@ -150,11 +150,12 @@ html:has([data-motion='reduced']) { scroll-behavior: auto; }
   .note-orbit { width: 40px; height: 40px; flex: none; }
   .note-orbit i:nth-child(3) { inset: 18px -3px; }
   .manifesto { padding: 48px 6% 38px; border-radius: 28px 28px 0 0; }
-  .manifesto-layout { grid-template-columns: 1fr; gap: 14px; }
-  .manifesto h2 { font-size: clamp(43px, 8.7vw, 65px); margin-top: 20px; }
+  .manifesto-layout { display: block; }
+  .manifesto-copy { position: relative; z-index: 1; }
+  .manifesto h2 { font-size: clamp(43px, 8.7vw, 65px); margin-top: 20px; text-shadow: 0 2px 12px var(--cream), 0 0 4px var(--cream); }
   .manifesto-kicker { font-size: 12px; letter-spacing: .12em; }
   .manifesto-description { font-size: 16px; line-height: 1.75; margin-top: 22px; }
-  .perspective-art { max-width: 390px; }
+  .perspective-art { position: absolute; top: 66px; right: -110px; width: clamp(420px, 110vw, 660px); max-width: none; opacity: .7; transform: rotate(-24deg); background: none; pointer-events: none; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #0002 36%, #000a 65%, #000 100%); mask-image: linear-gradient(90deg, transparent 0%, #0002 36%, #000a 65%, #000 100%); }
   .footer { padding: 28px 6% 20px; }
   .footer-return { width: 48px; height: 48px; }
   .footer-details { display: flex; flex-direction: column; gap: 12px; padding: 18px 0 20px; }
