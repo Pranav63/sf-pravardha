@@ -68,3 +68,9 @@ Import `Pranav63/sf-pravardha` and select:
 | Build command | `npm run build` |
 | Output directory | `dist` |
 | Environment variables | None |
+
+## Web Analytics
+
+Vercel Web Analytics is enabled for `sf-pravardha`. The official `@vercel/analytics/react` component is mounted once in `src/main.tsx` and records page views on Vercel. View traffic in the [project Analytics dashboard](https://vercel.com/pranav63s-projects/sf-pravardha/analytics).
+
+The setup uses the project's free allowance, with no paid add-ons or custom events. Development mode does not collect visits. The local browser tests stub Vercel's hosted script; production collection is verified after deployment. A local production preview does not provide Vercel's analytics endpoint.

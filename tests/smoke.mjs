@@ -12,7 +12,9 @@ let browser;
 let serverOutput = '';
 server.stderr.on('data', (data) => { serverOutput += data; });
 
-function watchErrors(page) {
+async function watchErrors(page) {
+  // Vercel serves this script in production; local UI checks must not collect visits.
+  await page.route('**/_vercel/insights/script.js', route => route.fulfill({ contentType: 'application/javascript', body: '' }));
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('response', (response) => { if (response.status() >= 400) errors.push(`${response.status()} ${response.url()}`); });
 }
@@ -93,11 +95,12 @@ try {
   browser = await chromium.launch({ channel: process.env.CHROME_CHANNEL || 'chrome' });
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1, reducedMotion: 'no-preference' });
   const page = await context.newPage();
-  watchErrors(page);
+  await watchErrors(page);
   await page.goto(url, { waitUntil: 'networkidle' });
   await page.evaluate(() => document.fonts.ready);
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'full');
   await expect(page.locator('h1')).toHaveCount(1);
+  await expect(page.locator('script[data-sdkn="@vercel/analytics/react"]')).toHaveCount(1);
   await expect(page.locator('#approach')).toHaveCount(0);
   await expect(page.locator('.hero-eyebrow, .manifesto-rule, .corridor-atlas-note, .service-visual-note, .service-scroll-hint')).toHaveCount(0);
   await expect(page.locator('body')).not.toContainText(/Three perspectives\. One way forward\.|Scroll to explore/i);
@@ -386,7 +389,7 @@ try {
 
   const reducedContext = await browser.newContext({ viewport: { width: 1440, height: 1000 }, reducedMotion: 'reduce' });
   const reducedPage = await reducedContext.newPage();
-  watchErrors(reducedPage);
+  await watchErrors(reducedPage);
   await reducedPage.goto(url, { waitUntil: 'networkidle' });
   await expect(reducedPage.locator('.site')).toHaveAttribute('data-motion', 'reduced');
   await expect(reducedPage.locator('#expertise')).not.toHaveClass(/service-track--pinned/);
