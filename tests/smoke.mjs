@@ -51,14 +51,14 @@ async function checkContactSheet(page, openSheet, trigger) {
   const close = sheet.getByRole('button', { name: 'Close contact sheet' });
   await expect(sheet).toBeVisible();
   await expect(close).toBeFocused();
-  await expect(sheet.getByRole('link', { name: 'Email Parul' })).toHaveAttribute('href', /^mailto:parulgupta@hotmail\.com/);
+  await expect(sheet.getByRole('link', { name: 'Email Parul' })).toHaveAttribute('href', /^mailto:Pravardha\.Advisors@gmail\.com/);
   assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
   await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
     writeText: async value => { document.documentElement.dataset.copiedEmail = value; },
   } }));
   await sheet.getByRole('button', { name: 'Copy email' }).click();
   await expect(sheet.getByRole('status')).toHaveText('Email address copied.');
-  assert.equal(await page.evaluate(() => document.documentElement.dataset.copiedEmail), 'parulgupta@hotmail.com');
+  assert.equal(await page.evaluate(() => document.documentElement.dataset.copiedEmail), 'Pravardha.Advisors@gmail.com');
   // Native modal focus must stay inside the sheet in either direction.
   await close.focus();
   await page.keyboard.press('Shift+Tab');
@@ -171,7 +171,7 @@ try {
   await expect(regionButtons).toHaveCount(3);
   const atlasHeight = await page.getByTestId('route-map').evaluate(element => element.offsetHeight);
   let previousCamera = await transformOf(page.getByTestId('route-camera'));
-  for (const region of ['India', 'Singapore', 'GCC']) {
+  for (const region of ['India', 'SEA', 'GCC']) {
     const button = regionButtons.filter({ hasText: region });
     await button.click();
     await expect(button).toHaveAttribute('aria-pressed', 'true');
@@ -183,7 +183,7 @@ try {
   }
   // Camera, text and route emphasis should settle together, including rapid selections.
   await regionButtons.filter({ hasText: 'India' }).click();
-  await regionButtons.filter({ hasText: 'Singapore' }).click();
+  await regionButtons.filter({ hasText: 'SEA' }).click();
   await page.waitForTimeout(550);
   const settledCamera = await transformOf(page.getByTestId('route-camera'));
   await expect(page.locator('.corridor-detail h3:visible')).toHaveText('An international point of view.');
@@ -216,7 +216,7 @@ try {
     await expect(page.getByTestId('service-stage')).toHaveAttribute('data-active', `${index}`);
     await expect(page.locator('.service-button[aria-pressed="true"]')).toHaveCount(1);
     const href = await page.getByRole('link', { name: 'Discuss your requirements' }).getAttribute('href');
-    assert.ok(href.startsWith('mailto:parulgupta@hotmail.com'));
+    assert.ok(href.startsWith('mailto:Pravardha.Advisors@gmail.com'));
     assert.ok(decodeURIComponent(href).includes(title.toLowerCase()));
   }
   await page.locator('.service-button').first().focus();
@@ -230,7 +230,7 @@ try {
   await expect(sculptureCanvas).toBeVisible();
   await page.getByTestId('service-stage').screenshot({ path: 'test-results/desktop-services.png' });
 
-  await expect(page.locator('#contact .contact-button')).toHaveAttribute('href', /^mailto:parulgupta@hotmail\.com/);
+  await expect(page.locator('#contact .contact-button')).toHaveAttribute('href', /^mailto:Pravardha\.Advisors@gmail\.com/);
   for (const link of await page.locator('a[href^="#"]').all()) {
     const target = await link.getAttribute('href');
     await expect(page.locator(target), `Anchor target ${target}`).toHaveCount(1);
@@ -387,8 +387,8 @@ try {
   await expect(reducedPage.locator('#service-detail h3')).toContainText('Different markets.');
   await reducedPage.locator('.corridor-geography').scrollIntoViewIfNeeded();
   await expect(reducedPage.locator('#perspective animateMotion')).toHaveCount(0);
-  await reducedPage.locator('.corridor-controls button').filter({ hasText: 'Singapore' }).click();
-  await expect(reducedPage.getByTestId('route-map')).toHaveAttribute('data-region', 'Singapore');
+  await reducedPage.locator('.corridor-controls button').filter({ hasText: 'SEA' }).click();
+  await expect(reducedPage.getByTestId('route-map')).toHaveAttribute('data-region', 'SEA');
   await expect(reducedPage.locator('.corridor-detail h3:visible')).toHaveText('An international point of view.');
   for (const selector of ['.hero-content', '#intro-title > span', '.service-copy', '.corridor-detail']) {
     const opacities = await reducedPage.locator(selector).evaluateAll((elements) => elements.map((element) => Number(getComputedStyle(element).opacity)));

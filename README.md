@@ -46,7 +46,7 @@ The people section uses the supplied `public/images/md_parul.png` portrait. The 
 
 The map camera, region title, description and route emphasis share a 450ms transition.
 
-Enquiry links open the visitor's email application addressed to `parulgupta@hotmail.com`. The site does not send or store enquiries itself.
+Enquiry links open the visitor's email application addressed to `Pravardha.Advisors@gmail.com`. The site does not send or store enquiries itself.
 
 ## Motion
 

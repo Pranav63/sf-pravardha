@@ -16,8 +16,8 @@ const perspectives = [
     focus: 'COMMERCIAL STRATEGY · CROSS-BORDER GROWTH',
   },
   {
-    name: 'Singapore', short: 'Singapore', code: '03', label: 'An international point of view.',
-    text: 'Experience developing trade finance opportunities in Singapore brings an international perspective to working capital, commercial relationships and business growth.',
+    name: 'Southeast Asia', short: 'SEA', code: '03', label: 'An international point of view.',
+    text: 'Experience developing trade finance opportunities across Southeast Asia brings an international perspective to working capital, commercial relationships and business growth.',
     point: [560, 275], camera: { x: -100, y: -28, scale: 1.2 },
     focus: 'TRADE FINANCE · WORKING CAPITAL',
   },
@@ -81,7 +81,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
           <motion.p key={selected} initial={quiet ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transition}>{perspective.name}</motion.p>
         </div>
         <div className="corridor-geography">
-          <svg className="corridor-map" viewBox="200 40 440 320" aria-label="Explore our commercial perspective across the GCC, India and Singapore" role="group">
+          <svg className="corridor-map" viewBox="200 40 440 320" aria-label="Explore our commercial perspective across the GCC, India and Southeast Asia" role="group">
             <defs>
               <pattern id="corridor-dots" width="4.8" height="4.8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.05" fill="#96bba6" /></pattern>
               <clipPath id="corridor-land">{outlines.map((d, i) => <path d={d} key={i} />)}</clipPath>

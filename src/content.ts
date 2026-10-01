@@ -1,7 +1,7 @@
 // Public-facing copy. Update this file to change the site's wording and contact details.
 export const company = {
   name: 'Pravardha Advisors',
-  email: 'parulgupta@hotmail.com',
+  email: 'Pravardha.Advisors@gmail.com',
   location: 'Ras Al Khaimah, United Arab Emirates',
   address: 'VUNE2201, Compass Building, Al Hulaila Industrial Zone-FZ, Ras Al Khaimah, UAE',
   hero: {
