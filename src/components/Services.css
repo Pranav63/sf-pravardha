@@ -56,11 +56,11 @@
 .service-sculpture canvas { display: block; width: 100%; height: 100%; }
 .sculpture-fallback { width: 100%; height: 100%; fill: none; stroke: #50755c; stroke-width: 18; }
 .sculpture-fallback rect:last-child { stroke: #b6a174; stroke-width: 12; }
-.service-visual-caption { position: absolute; bottom: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.service-visual-caption > span:first-child { font: italic 400 clamp(37px, 4vw, 64px)/1 var(--serif); letter-spacing: -.04em; }
+.service-visual-caption { position: absolute; bottom: 14px; left: 14px; right: 14px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.service-visual-caption > span:first-child { font: italic 400 clamp(34px, 3.6vw, 54px)/1 var(--serif); letter-spacing: -.04em; }
 .service-visual-caption i { color: var(--gold); }
-.service-visual-number { font: 400 29px/1 var(--serif); color: #526e5f; white-space: nowrap; }
-.service-visual-number small { font: 10px/1.3 var(--sans); color: #7c8a7f; letter-spacing: .1em; }
+.service-visual-number { display: inline-flex; align-items: center; gap: 10px; padding-left: 20px; border-left: 1px solid #123e3229; font: 500 26px/1.25 var(--sans); font-variant-numeric: tabular-nums; color: #315641; white-space: nowrap; }
+.service-visual-number small { font: 500 14px/1.4 var(--sans); color: #607359; letter-spacing: .02em; }
 .service-controls-row { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-top: 35px; padding-top: 15px; }
 .service-controls { position: relative; display: flex; padding: 6px; border-radius: 100px; border: 1px solid #fff9; background: linear-gradient(135deg, #fffffff0, #e7ece2a6 48%, #fafaf0c7); -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5); box-shadow: inset 1px 1px 1px #fff, inset -1px -1px 1px #9baf9638, 0 3px 6px #123e3206, 0 14px 32px -10px #123e3226; }
 .service-controls .service-button { position: relative; display: flex; flex: 1; width: auto; min-height: 51px; align-items: center; justify-content: center; gap: 11px; padding: 12px 21px; border: 0; border-radius: 100px; background: none; font: 500 13px/1.3 var(--sans); color: #5b7162; white-space: nowrap; transition: color .25s, background .25s; }
@@ -69,7 +69,7 @@
 .service-controls .service-button:active { background: #ffffff80; }
 .service-controls .service-button.active { color: #fff; }
 .service-controls .service-button .service-selection { position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(145deg, #315c4a, #123e32e8); box-shadow: 0 3px 8px #123e3226, inset 1px 1px 1px #ffffff45, inset -1px -1px 1px #06251c45; }
-.service-button-number { font-size: 10px; opacity: .65; }
+.service-button-number { font-size: 12px; font-variant-numeric: tabular-nums; opacity: .8; }
 .service-progress { height: 1px; background: #123e3214; margin-top: 24px; }
 .service-progress > span { display: block; height: 1px; background: #b19c6b; transform-origin: left; }
 
@@ -102,7 +102,7 @@
 .mobile-service-chapter { position: relative; min-height: max(650px, 86svh); display: flex; align-items: center; padding: 55px 6% 45px; scroll-margin-top: 100px; }
 .mobile-service-copy { width: 100%; max-width: 600px; margin-inline: auto; }
 .mobile-service-label { display: flex; align-items: baseline; gap: 13px; font-size: 13px; font-weight: 600; color: #365744; }
-.mobile-service-label > span { font: italic 400 29px/1 var(--serif); color: #8a754c; }
+.mobile-service-label > span { font: 600 15px/1.4 var(--sans); font-variant-numeric: tabular-nums; color: #6b684b; }
 .mobile-service-chapter h3 { position: relative; margin: 24px 0 0; max-width: 590px; font: 400 clamp(42px, 9.9vw, 66px)/1.02 var(--serif); letter-spacing: -.035em; white-space: pre-line; text-wrap: balance; text-shadow: 0 2px 15px #f5f3ede6; }
 .mobile-service-description { position: relative; max-width: 530px; margin-top: 25px; font-size: 17px; line-height: 1.75; color: #304e3f; text-shadow: 0 0 10px var(--cream), 0 0 3px var(--cream); }
 .mobile-service-chapter .service-inclusions { display: grid; gap: 9px; margin: 24px 0 0; padding: 0; list-style: none; }

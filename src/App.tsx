@@ -97,23 +97,44 @@ function Hero({ reducedMotion }: { reducedMotion: boolean }) {
 function Perspective({ reducedMotion }: { reducedMotion: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start .85', 'end .3'] });
-  const x = useTransform(scrollYProgress, [0, 1], ['10%', '-10%']);
-  const draw = useTransform(scrollYProgress, [0, .75], [.08, 1]);
-  const light = useTransform(scrollYProgress, [0, .8], ['0%', '100%']);
+  const rearX = useTransform(scrollYProgress, [0, 1], [-16, 10]);
+  const frontX = useTransform(scrollYProgress, [0, 1], [16, -10]);
+  const lift = useTransform(scrollYProgress, [0, 1], [10, -8]);
   const words = ['Ambition', 'opens', 'doors.'];
   return <section className="manifesto" id="introduction" ref={ref} aria-labelledby="intro-title">
-    <motion.div className="manifesto-watermark" aria-hidden="true" style={reducedMotion ? undefined : { x }}>BEYOND BORDERS</motion.div>
-    <div className="manifesto-layout"><div><p className="eyebrow">THE PRAVARDHA PERSPECTIVE</p><h2 id="intro-title">{words.map((word, i) => <Fragment key={word}><motion.span initial={reducedMotion ? false : { opacity: .12, y: 35 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, amount: .9 }} transition={{ duration: .7, delay: i * .1, ease }}>{word}</motion.span>{' '}</Fragment>)}<em>The right structure<br />keeps them open.</em></h2></div><div className="manifesto-right"><svg className="perspective-flourish" viewBox="0 0 240 175" fill="none" aria-hidden="true">
-      <defs>
-        <linearGradient id="ribbon-jade" x1="20" y1="145" x2="210" y2="30" gradientUnits="userSpaceOnUse"><stop stopColor="#b4c7b4" stopOpacity=".15" /><stop offset=".3" stopColor="#658e79" /><stop offset=".55" stopColor="#e3e8d9" /><stop offset=".8" stopColor="#7f9f84" /><stop offset="1" stopColor="#b6cbb8" stopOpacity=".2" /></linearGradient>
-        <linearGradient id="ribbon-gold" x1="30" y1="140" x2="220" y2="35" gradientUnits="userSpaceOnUse"><stop stopColor="#c4ad78" stopOpacity=".1" /><stop offset=".4" stopColor="#b59a61" /><stop offset=".65" stopColor="#e9ddba" /><stop offset="1" stopColor="#b79d68" stopOpacity=".3" /></linearGradient>
-        <linearGradient id="ribbon-light"><stop stopColor="#fff" stopOpacity="0" /><motion.stop offset={reducedMotion ? '.55' : light} stopColor="#fffdf2" /><stop offset="1" stopColor="#fff" stopOpacity="0" /></linearGradient>
-      </defs>
-      <motion.path d="M24 139C99 139 36 28 112 28S156 137 220 40" stroke="url(#ribbon-jade)" strokeWidth="14" strokeLinecap="round" style={{ pathLength: reducedMotion ? 1 : draw }} />
-      <motion.path d="M21 119C84 139 70 45 117 45S165 112 211 72" stroke="url(#ribbon-gold)" strokeWidth="8" strokeLinecap="round" style={{ pathLength: reducedMotion ? 1 : draw }} />
-      <motion.path d="M34 147C98 113 50 76 91 53S178 53 205 20" stroke="url(#ribbon-jade)" strokeWidth="6" strokeLinecap="round" style={{ pathLength: reducedMotion ? 1 : draw }} />
-      <motion.path d="M24 135C96 135 38 25 112 25S157 132 220 36" stroke="url(#ribbon-light)" strokeWidth="1.5" strokeLinecap="round" style={{ pathLength: reducedMotion ? 1 : draw }} />
-    </svg><p>{company.introduction.text}</p></div></div>
+    <div className="manifesto-layout">
+      <div className="manifesto-copy">
+        <p className="eyebrow manifesto-kicker">BEYOND BORDERS</p>
+        <h2 id="intro-title">{words.map((word, i) => <Fragment key={word}><motion.span initial={reducedMotion ? false : { y: 14 }} whileInView={{ y: 0 }} viewport={{ once: true, amount: .5 }} transition={{ duration: .45, delay: i * .06, ease }}>{word}</motion.span>{' '}</Fragment>)}<em>The right structure<br />keeps them open.</em></h2>
+        <p className="manifesto-description">{company.introduction.text}</p>
+      </div>
+      <div className="perspective-art" aria-hidden="true">
+        <svg className="perspective-portals" viewBox="0 0 520 390" fill="none">
+          <defs>
+            <linearGradient id="perspective-jade" x1="140" y1="70" x2="310" y2="285" gradientUnits="userSpaceOnUse"><stop stopColor="#b5d0bb" stopOpacity=".8" /><stop offset=".45" stopColor="#477d65" stopOpacity=".8" /><stop offset="1" stopColor="#194d3c" stopOpacity=".95" /></linearGradient>
+            <linearGradient id="perspective-brass" x1="238" y1="120" x2="390" y2="335" gradientUnits="userSpaceOnUse"><stop stopColor="#f2e7c9" /><stop offset=".4" stopColor="#baa16a" stopOpacity=".9" /><stop offset=".75" stopColor="#e4d8b8" stopOpacity=".85" /><stop offset="1" stopColor="#9e8759" /></linearGradient>
+            <linearGradient id="perspective-edge"><stop stopColor="#fffdf3" /><stop offset="1" stopColor="#afc3ac" stopOpacity=".25" /></linearGradient>
+            <radialGradient id="perspective-shadow"><stop stopColor="#244d36" stopOpacity=".18" /><stop offset="1" stopColor="#244d36" stopOpacity="0" /></radialGradient>
+          </defs>
+          <ellipse cx="267" cy="347" rx="195" ry="27" fill="url(#perspective-shadow)" />
+          <path d="M81 317L283 263L437 302L234 357Z" fill="#e8e9df" stroke="#d6ddce" />
+          <motion.g style={reducedMotion ? undefined : { x: rearX }}>
+            <path d="M140 285V90L310 45V240ZM174 244L279 217V85L174 113Z" fill="url(#perspective-jade)" fillRule="evenodd" />
+            <path d="M310 45L325 54V249L310 240Z" fill="#34634d" fillOpacity=".75" />
+            <path d="M140 285L155 294L325 249L310 240Z" fill="#799d81" fillOpacity=".8" />
+            <path d="M174 113L188 121V240L174 244Z" fill="#c0d2bd" fillOpacity=".6" />
+            <path d="M141 284V91L310 46M174 244V113L279 85" stroke="url(#perspective-edge)" strokeWidth="1.5" />
+          </motion.g>
+          <motion.g style={reducedMotion ? undefined : { x: frontX, y: lift }}>
+            <path d="M238 313V118L390 151V346ZM267 280L359 301V176L267 155Z" fill="url(#perspective-brass)" fillRule="evenodd" />
+            <path d="M390 151L405 142V337L390 346Z" fill="#99875e" fillOpacity=".85" />
+            <path d="M238 118L253 109L405 142L390 151Z" fill="#e8debf" />
+            <path d="M267 155L280 149L359 167V176Z" fill="#aa9466" />
+            <path d="M239 313V119L390 152M267 280V155L359 176" stroke="#fff9e1" strokeOpacity=".8" strokeWidth="1.5" />
+          </motion.g>
+        </svg>
+      </div>
+    </div>
   </section>;
 }
 

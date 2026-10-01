@@ -125,7 +125,7 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
               <AnimatePresence initial={false} mode="popLayout">
                 <motion.span key={visual} initial={reduce ? false : { y: 28, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -28, opacity: 0 }} transition={{ duration: reduce ? 0 : 0.5 }}>{visual}<i>.</i></motion.span>
               </AnimatePresence>
-              <span className="service-visual-number">{service.number}<small> / 03</small></span>
+              <span className="service-visual-number"><span>{service.number}</span><small>of 03</small></span>
             </div>
           </div>
         </div>

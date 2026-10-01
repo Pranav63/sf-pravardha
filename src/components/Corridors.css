@@ -57,6 +57,7 @@
   display: grid;
   grid-template-columns: minmax(300px, .9fr) minmax(0, 1.3fr);
   grid-template-rows: auto auto 1fr;
+  column-gap: clamp(24px, 3vw, 44px);
   isolation: isolate;
   border: 1px solid #bdd9c62a;
   border-radius: 36px;
@@ -122,7 +123,7 @@
 .corridor-region-title { position: relative; grid-column: 1; grid-row: 2; padding: 0 28px; pointer-events: none; }
 .corridor-region-title > span { display: block; color: #91a697; font: 500 12px/1.6 var(--sans, 'Manrope', sans-serif); letter-spacing: .12em; }
 .corridor-region-title > p { margin: 7px 0 0; color: #e4e7d8; font: 400 clamp(44px, 4.4vw, 64px)/1 var(--serif, 'Cormorant Garamond', Georgia, serif); letter-spacing: -.04em; }
-.corridor-geography { position: relative; grid-column: 2; grid-row: 2 / 4; min-height: 300px; margin: 0 18px 20px 0; overflow: hidden; pointer-events: none; }
+.corridor-geography { position: relative; grid-column: 2; grid-row: 2 / 4; min-height: 300px; margin: 0 24px 24px 0; border-radius: 18px; overflow: hidden; pointer-events: none; }
 .corridor-map { position: absolute; inset: 0; display: block; width: 100%; height: 100%; overflow: visible; }
 .corridor-grid { stroke: #c1d9b8; stroke-width: .5px; opacity: .07; }
 .corridor-orbits { stroke: #b6ceaa; stroke-width: .6px; opacity: .15; }
@@ -183,7 +184,7 @@
   .corridor-controls { margin-top: 12px; width: 100%; }
   .corridor-control { flex: 1; min-height: 44px; padding: 10px 14px; font-size: 14px; }
   .corridor-region-title { display: none; }
-  .corridor-geography { height: 210px; min-height: 0; max-width: 480px; margin: 0 auto; }
+  .corridor-geography { height: 210px; min-height: 0; max-width: min(480px, calc(100% - 28px)); margin: 14px auto 20px; }
   .corridor-map-label { font-size: 17px; letter-spacing: 1.1px; }
   .corridor-atlas-bottom { padding: 0 14px 17px; }
   .corridor-detail { padding: 18px; border-radius: 18px; }
