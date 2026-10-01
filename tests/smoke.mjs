@@ -60,7 +60,8 @@ try {
   await expect(page.locator('.site')).toHaveAttribute('data-motion', 'full');
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('#approach')).toHaveCount(0);
-  await expect(page.locator('.hero-eyebrow, .manifesto-rule, .corridor-atlas-note')).toHaveCount(0);
+  await expect(page.locator('.hero-eyebrow, .manifesto-rule, .corridor-atlas-note, .service-visual-note, .service-scroll-hint')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText(/Three perspectives\. One way forward\.|Scroll to explore/i);
   await expect(page.locator('#intro-title')).toContainText('Ambition opens doors.');
   await checkCleanControls(page);
   assert.match(await page.title(), /Pravardha/);
@@ -128,12 +129,14 @@ try {
 
   const regionButtons = page.locator('.corridor-controls button');
   await expect(regionButtons).toHaveCount(3);
+  const atlasHeight = await page.getByTestId('route-map').evaluate(element => element.offsetHeight);
   let previousCamera = await transformOf(page.getByTestId('route-camera'));
   for (const region of ['India', 'Singapore', 'GCC']) {
     const button = regionButtons.filter({ hasText: region });
     await button.click();
     await expect(button).toHaveAttribute('aria-pressed', 'true');
     await expect(page.getByTestId('route-map')).toHaveAttribute('data-region', region);
+    assert.equal(await page.getByTestId('route-map').evaluate(element => element.offsetHeight), atlasHeight, 'Region changes must preserve the map height and reading position.');
     await expect(page.locator('.corridor-controls button[aria-pressed="true"]')).toHaveCount(1);
     await expect.poll(() => transformOf(page.getByTestId('route-camera'))).not.toBe(previousCamera);
     previousCamera = await transformOf(page.getByTestId('route-camera'));
@@ -315,7 +318,7 @@ try {
   await expect(reducedPage.locator('#perspective animateMotion')).toHaveCount(0);
   await reducedPage.locator('.corridor-controls button').filter({ hasText: 'Singapore' }).click();
   await expect(reducedPage.getByTestId('route-map')).toHaveAttribute('data-region', 'Singapore');
-  await expect(reducedPage.locator('.corridor-detail h3')).toHaveText('An international point of view.');
+  await expect(reducedPage.locator('.corridor-detail h3:visible')).toHaveText('An international point of view.');
   for (const selector of ['.hero-content', '#intro-title > span', '.service-copy', '.corridor-detail']) {
     const opacities = await reducedPage.locator(selector).evaluateAll((elements) => elements.map((element) => Number(getComputedStyle(element).opacity)));
     assert.ok(opacities.length && opacities.every((opacity) => opacity === 1), `Reduced-motion content must remain visible: ${selector}`);

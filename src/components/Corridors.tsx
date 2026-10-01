@@ -83,7 +83,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
           </AnimatePresence>
         </div>
         <div className="corridor-geography">
-          <svg className="corridor-map" viewBox="80 0 620 405" aria-label="Explore our commercial perspective across the GCC, India and Singapore" role="group">
+          <svg className="corridor-map" viewBox="200 40 440 320" aria-label="Explore our commercial perspective across the GCC, India and Singapore" role="group">
             <defs>
               <pattern id="corridor-dots" width="4.8" height="4.8" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.05" fill="#96bba6" /></pattern>
               <clipPath id="corridor-land">{outlines.map((d, i) => <path d={d} key={i} />)}</clipPath>
@@ -115,14 +115,14 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
         </div>
         <div className="corridor-atlas-bottom">
           <div className="corridor-detail" aria-live="polite" aria-atomic="true">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div key={selected} initial={{ opacity: 0, y: quiet ? 0 : 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: quiet ? 0 : -8 }} transition={{ duration: quiet ? 0 : 0.25 }}>
+            {perspectives.map((item, index) => (
+              <motion.div key={item.name} aria-hidden={selected !== index} initial={false} animate={{ opacity: selected === index ? 1 : 0, y: quiet || selected === index ? 0 : 8 }} transition={{ duration: quiet ? 0 : 0.25 }}>
                 <span className="corridor-detail-label">THE PERSPECTIVE</span>
-                <h3>{perspective.label}</h3>
-                <p>{perspective.text}</p>
-                <span className="corridor-detail-focus">{perspective.focus}</span>
+                <h3>{item.label}</h3>
+                <p>{item.text}</p>
+                <span className="corridor-detail-focus">{item.focus}</span>
               </motion.div>
-            </AnimatePresence>
+            ))}
           </div>
         </div>
       </motion.div>

@@ -69,7 +69,7 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
         <div ref={visualRef} className="mobile-service-world" aria-hidden="true">
           {nearViewport && <Suspense fallback={null}><ServiceSculpture progress={sculptureProgress} chapter={active} scrollDriven reducedMotion={reduce} /></Suspense>}
         </div>
-        <div className="mobile-service-heading"><h2 id="expertise-title">OUR EXPERTISE</h2><span>Three perspectives. One way forward.</span></div>
+        <div className="mobile-service-heading"><h2 id="expertise-title">OUR EXPERTISE</h2></div>
         {services.map((item) => (
           <article key={item.id} id={`service-${item.id}`} className="mobile-service-chapter" aria-labelledby={`service-${item.id}-title`}>
             <div className="mobile-service-copy">
@@ -90,7 +90,6 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
       <div className="service-stage" data-testid="service-stage" data-active={active}>
         <div className="service-stage-heading">
           <h2 id="expertise-title">01 / OUR EXPERTISE</h2>
-          <span>Three perspectives. One way forward.</span>
         </div>
 
         <div className="service-scene">
@@ -121,7 +120,6 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
 
           <div ref={visualRef} className="service-visual" aria-hidden="true">
             <div className="service-visual-corners"><span /><span /><span /><span /></div>
-            <span className="service-visual-note">A CONNECTED PERSPECTIVE</span>
             {nearViewport && <Suspense fallback={null}><ServiceSculpture progress={sculptureProgress} chapter={active} scrollDriven={pinned} reducedMotion={reduce} /></Suspense>}
             <div className="service-visual-caption">
               <AnimatePresence initial={false} mode="popLayout">
@@ -150,7 +148,6 @@ export default function Services({ reducedMotion }: { reducedMotion?: boolean })
               </button>
             ))}
           </div>
-          <span className="service-scroll-hint">{pinned ? 'SCROLL TO EXPLORE' : 'SELECT A PERSPECTIVE'}</span>
         </div>
         <div className="service-progress" aria-hidden="true"><motion.span style={{ scaleX: pinned ? progress : (active + 1) / services.length }} /></div>
       </div>
