@@ -44,6 +44,45 @@ async function checkCleanControls(page) {
   assert.deepEqual(decoratedControls, [], 'Buttons and links must keep clean, arrow-free labels.');
 }
 
+async function checkContactSheet(page, openSheet, trigger) {
+  const position = await page.evaluate(() => scrollY);
+  await openSheet();
+  const sheet = page.getByRole('dialog', { name: 'Your next move. Let’s talk it through.' });
+  const close = sheet.getByRole('button', { name: 'Close contact sheet' });
+  await expect(sheet).toBeVisible();
+  await expect(close).toBeFocused();
+  await expect(sheet.getByRole('link', { name: 'Email Parul' })).toHaveAttribute('href', /^mailto:parulgupta@hotmail\.com/);
+  assert.equal(await page.evaluate(() => document.body.style.overflow), 'hidden');
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
+    writeText: async value => { document.documentElement.dataset.copiedEmail = value; },
+  } }));
+  await sheet.getByRole('button', { name: 'Copy email' }).click();
+  await expect(sheet.getByRole('status')).toHaveText('Email address copied.');
+  assert.equal(await page.evaluate(() => document.documentElement.dataset.copiedEmail), 'parulgupta@hotmail.com');
+  // Native modal focus must stay inside the sheet in either direction.
+  await close.focus();
+  await page.keyboard.press('Shift+Tab');
+  await expect(sheet.getByRole('button', { name: 'Copied', exact: true })).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(sheet).toBeHidden();
+  await expect(trigger).toBeFocused();
+  assert.ok(Math.abs(await page.evaluate(() => scrollY) - position) < 2, 'The sheet must preserve the reading position.');
+  assert.equal(await page.evaluate(() => document.body.style.overflow), '');
+  await openSheet();
+  await expect(sheet.getByRole('button', { name: 'Copy email' })).toBeVisible();
+  await page.evaluate(() => Object.defineProperty(navigator, 'clipboard', { configurable: true, value: {
+    writeText: async () => { throw new Error('Clipboard access denied'); },
+  } }));
+  await sheet.getByRole('button', { name: 'Copy email' }).click();
+  await expect(sheet.getByRole('status')).toContainText('Copy is unavailable');
+  await expect(sheet.getByRole('status')).not.toContainText('copied');
+  await page.mouse.click(2, 2);
+  await expect(sheet).toBeHidden();
+  await expect(trigger).toBeFocused();
+}
+
 try {
   for (let attempt = 0; ; attempt++) {
     if (server.exitCode !== null) throw new Error(`Preview server stopped: ${serverOutput}`);
@@ -69,6 +108,7 @@ try {
   await expect.poll(() => identityTransform(page.locator('.hero-line > span').last())).toBe(true);
   await mkdir('test-results', { recursive: true });
   await page.screenshot({ path: 'test-results/desktop-hero.png' });
+  await checkContactSheet(page, () => page.locator('.header-contact').click(), page.locator('.header-contact'));
 
   const heroTransform = await transformOf(page.getByTestId('hero-art'));
   await goTo(page, 300);
@@ -141,6 +181,15 @@ try {
     await expect.poll(() => transformOf(page.getByTestId('route-camera'))).not.toBe(previousCamera);
     previousCamera = await transformOf(page.getByTestId('route-camera'));
   }
+  // Camera, text and route emphasis should settle together, including rapid selections.
+  await regionButtons.filter({ hasText: 'India' }).click();
+  await regionButtons.filter({ hasText: 'Singapore' }).click();
+  await page.waitForTimeout(550);
+  const settledCamera = await transformOf(page.getByTestId('route-camera'));
+  await expect(page.locator('.corridor-detail h3:visible')).toHaveText('An international point of view.');
+  assert.equal(await page.locator('.corridor-detail > [aria-hidden="false"]').evaluate(element => Number(getComputedStyle(element).opacity)), 1);
+  await page.waitForTimeout(100);
+  assert.equal(await transformOf(page.getByTestId('route-camera')), settledCamera, 'The map camera should settle within its 450ms transition.');
   await page.getByRole('button', { name: 'Explore India', exact: true }).focus();
   await page.keyboard.press('Enter');
   await expect(page.getByTestId('route-map')).toHaveAttribute('data-region', 'India');
@@ -216,6 +265,28 @@ try {
   await page.goto(url, { waitUntil: 'networkidle' });
   await goTo(page, 0);
   const menu = page.locator('.menu-toggle');
+  const header = page.locator('.site-header');
+  await goTo(page, 650);
+  await expect(header).toHaveAttribute('data-hidden', 'true');
+  await expect.poll(() => header.evaluate(element => element.getBoundingClientRect().bottom)).toBeLessThan(0);
+  await goTo(page, 620);
+  await expect(header).toHaveAttribute('data-hidden', 'false');
+  for (const top of [624, 620, 624, 620]) { await goTo(page, top); await page.waitForTimeout(30); }
+  await expect(header).toHaveAttribute('data-hidden', 'false');
+  await checkContactSheet(page, async () => {
+    await menu.click();
+    await page.getByRole('navigation', { name: 'Mobile navigation' }).getByRole('button', { name: 'Let’s talk' }).click();
+  }, menu);
+  await page.keyboard.press('Tab');
+  await menu.focus();
+  await goTo(page, 750);
+  await expect(header).toHaveAttribute('data-hidden', 'false');
+  await menu.click();
+  await goTo(page, 850);
+  await expect(header).toHaveAttribute('data-hidden', 'false');
+  await page.keyboard.press('Escape');
+  await goTo(page, 0);
+
   const menuBounds = await menu.boundingBox();
   assert.ok(menuBounds.width >= 44 && menuBounds.height >= 44, 'The mobile menu needs a comfortable touch target.');
   const menuAlignment = await menu.evaluate((element) => {
@@ -323,6 +394,11 @@ try {
     const opacities = await reducedPage.locator(selector).evaluateAll((elements) => elements.map((element) => Number(getComputedStyle(element).opacity)));
     assert.ok(opacities.length && opacities.every((opacity) => opacity === 1), `Reduced-motion content must remain visible: ${selector}`);
   }
+  await reducedPage.locator('.header-contact').click();
+  await expect(reducedPage.getByRole('dialog')).toBeVisible();
+  await expect.poll(() => identityTransform(reducedPage.getByRole('dialog'))).toBe(true);
+  await reducedPage.getByRole('button', { name: 'Close contact sheet' }).click();
+  await expect(reducedPage.getByRole('dialog')).toBeHidden();
   await reducedPage.screenshot({ path: 'test-results/desktop-reduced-full.png', fullPage: true });
   await reducedPage.setViewportSize({ width: 390, height: 844 });
   await reducedPage.goto(url, { waitUntil: 'networkidle' });
@@ -340,6 +416,7 @@ try {
     if (reducedMobileAngle === undefined) reducedMobileAngle = angle;
     else assert.equal(angle, reducedMobileAngle, 'Reduced motion must freeze the mobile sculpture while all chapters remain scrollable.');
   }
+  await expect(reducedPage.locator('.site-header')).toHaveAttribute('data-hidden', 'false');
   await reducedContext.close();
   assert.deepEqual(errors, [], `Browser errors: ${errors.join('\n')}`);
   console.log('PASS: live 3D rotation with stable framing, idle rendering and OS motion continuity; hero/map motion, scroll chapters, clean arrow-free controls, keyboard navigation, shorter page, word spacing, contact links, native mobile service reading with a rotating 3D backdrop, compact touch-friendly menu, supplied portrait, five viewport widths, readable type, reduced motion, and browser/network checks.');

@@ -129,7 +129,7 @@
 .corridor-orbits ellipse:nth-child(2) { stroke-dasharray: 1 7; opacity: .7; }
 .corridor-map-label { fill: #d8e0c8; font-family: var(--sans, 'Manrope', sans-serif); font-size: 12px; letter-spacing: 1.6px; font-weight: 500; }
 .corridor-location { cursor: pointer; pointer-events: auto; outline: none; }
-.corridor-location-halo { transition: r .25s, fill-opacity .25s; }
+.corridor-location-halo { transition: r .45s, fill-opacity .45s, stroke-width .45s; }
 .corridor-location-selected .corridor-location-halo,
 .corridor-location:hover .corridor-location-halo,
 .corridor-location:focus-visible .corridor-location-halo { r: 13px; fill-opacity: .24; stroke-width: 1px; }

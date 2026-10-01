@@ -42,7 +42,9 @@ The tests cover visible 3D rotation and stable framing, headline spacing, scroll
 - `src/components/Corridors.tsx`: regional descriptions and route map.
 - `src/styles.css` and component CSS files: appearance and responsive layout.
 
-The people section uses the supplied `public/images/md_parul.png` portrait. The mobile menu keeps its label and icon together in one touch target.
+The people section uses the supplied `public/images/md_parul.png` portrait. The mobile menu keeps its label and icon together in one touch target. The header slides away after downward scrolling and returns on upward scrolling; it stays visible for an open menu, keyboard navigation or reduced motion. “Let’s talk” opens a native contact dialog with email and clipboard actions, focus restoration and a manual-copy fallback if clipboard access is denied.
+
+The map camera, region title, description and route emphasis share a 450ms transition.
 
 Enquiry links open the visitor's email application addressed to `parulgupta@hotmail.com`. The site does not send or store enquiries itself.
 

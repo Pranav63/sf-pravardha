@@ -27,7 +27,7 @@ p { font-size: 18px; line-height: 1.75; }
 .button:hover { transform: translateY(-2px); box-shadow: inset 0 1px 1px #ffffff50, 0 10px 24px #163c3125; }
 
 /* One floating material plane keeps navigation above the evolving scenes. */
-.site-header { position: fixed; top: 18px; left: 3%; right: 3%; max-width: 1500px; margin: auto; z-index: 50; min-height: 80px; border-radius: 28px; padding: 12px 24px; display: flex; align-items: center; gap: 30px; transition: background .4s ease, color .4s ease, box-shadow .4s ease; }
+.site-header { position: fixed; top: 18px; left: 3%; right: 3%; max-width: 1500px; margin: auto; z-index: 50; min-height: 80px; border-radius: 28px; padding: 12px 24px; display: flex; align-items: center; gap: 30px; transition: background .4s ease, color .4s ease, box-shadow .4s ease, transform .28s cubic-bezier(.22, 1, .36, 1); }
 .site-header[data-expanded="true"] { background: #f5f4eee8; box-shadow: inset 1px 1px 1px #fff, 0 22px 55px #123e3226; }
 .site-header[data-tone="dark"] { color: #f5f3ed; background: linear-gradient(135deg, #244b40d9, #10372dd6 55%, #294e40d9); border-color: #efffe32b; box-shadow: inset 1px 1px 1px #f2ffef45, inset -1px -1px 1px #0a29234d, 0 18px 45px -12px #061c2a60; }
 .site-header[data-tone="dark"][data-expanded="true"] { background: #20483eea; }
@@ -35,7 +35,7 @@ p { font-size: 18px; line-height: 1.75; }
 .site-header[data-tone="dark"] .brand-symbol { mix-blend-mode: normal; border-radius: 8px; }
 .site-header[data-tone="dark"] .nav-indicator { background: #ffffff24; box-shadow: inset 0 1px 0 #ffffff38, 0 3px 9px #08291f26; }
 .site-header[data-tone="dark"] .header-contact { border-color: #fff3; background: #ffffff0c; }
-.site-header[data-tone="dark"] .mobile-nav > a { border-color: #fff2; }
+.site-header[data-tone="dark"] .mobile-nav > :is(a, button) { border-color: #fff2; }
 .brand { display: inline-flex; align-items: center; gap: 12px; flex: none; }
 .brand-symbol { display: block; width: 44px; height: 41px; position: relative; overflow: hidden; mix-blend-mode: multiply; }
 .brand-symbol img { position: absolute; width: 95px; height: auto; max-width: none; left: -22px; top: -3px; }
@@ -46,7 +46,7 @@ p { font-size: 18px; line-height: 1.75; }
 .desktop-nav a > span:not(.nav-indicator) { position: relative; z-index: 1; }
 .desktop-nav a:hover { background: #ffffff1f; }
 .nav-indicator { position: absolute; inset: 0; background: linear-gradient(150deg, #ffffffe0, #ffffff85); border-radius: 100px; box-shadow: inset 0 1px 0 #fff, 0 3px 9px #1c423312; }
-.header-contact { display: inline-flex; align-items: center; justify-content: center; padding: 14px 23px; font-size: 14px; border: 1px solid #173f3528; border-radius: 100px; transition: transform .25s ease, background .25s ease; }
+.header-contact { background: transparent; display: inline-flex; align-items: center; justify-content: center; padding: 14px 23px; font-size: 14px; border: 1px solid #173f3528; border-radius: 100px; transition: transform .25s ease, background .25s ease; }
 .header-contact:hover { background: #ffffff35; }
 .menu-toggle, .mobile-nav { display: none; }
 
@@ -134,8 +134,10 @@ html:has([data-motion='reduced']) { scroll-behavior: auto; }
   .site-header[data-tone="dark"] .menu-toggle { background: #ffffff0d; border-color: #ffffff26; }
   .menu-toggle:active { background: #ffffff65; }
   .site-header[data-tone="dark"] .menu-toggle:active { background: #ffffff20; }
+  .site-header[data-hidden="true"]:not(:has(:focus-visible)) { transform: translateY(calc(-100% - 30px)); }
+  .mobile-nav > button { background: none; border: 0; text-align: left; }
   .mobile-nav { width: 100%; display: flex; flex-direction: column; max-height: calc(100dvh - 100px); overflow-y: auto; overscroll-behavior: contain; padding-inline: 6px; }
-  .mobile-nav > a { flex-shrink: 0; padding: 18px 8px; min-height: 58px; font-size: 22px; display: flex; align-items: center; border-top: 1px solid #173f3514; }
+  .mobile-nav > :is(a, button) { flex-shrink: 0; padding: 18px 8px; min-height: 58px; font-size: 22px; display: flex; align-items: center; border-top: 1px solid #173f3514; }
   .hero { height: max(850px, 100svh); max-height: none; min-height: 850px; }
   .hero-content { width: 100%; padding: 150px 6% 0; }
   h1 { font-size: clamp(60px, 19vw, 115px); }

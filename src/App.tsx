@@ -5,6 +5,7 @@ import Corridors from './components/Corridors';
 import Services from './components/Services';
 import People from './components/People';
 import Contact from './components/Contact';
+import ContactSheet from './components/ContactSheet';
 
 const navigation = [
   { id: 'expertise', label: 'Expertise' },
@@ -17,9 +18,10 @@ function Brand() {
   return <a className="brand" href="#home" aria-label="Pravardha Advisors home"><span className="brand-symbol"><img src="/images/pravardha-logo.jpeg" alt="" width="1232" height="864" /></span><span className="brand-name">PRAVARDHA<small>ADVISORS</small></span></a>;
 }
 
-function Header({ reducedMotion }: { reducedMotion: boolean }) {
+function Header({ reducedMotion, contactOpen, onContact }: { reducedMotion: boolean; contactOpen: boolean; onContact: (trigger: HTMLElement) => void }) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState('home');
+  const [hidden, setHidden] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   const header = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -40,14 +42,36 @@ function Header({ reducedMotion }: { reducedMotion: boolean }) {
     window.addEventListener('pointerdown', outside);
     return () => { window.removeEventListener('keydown', close); window.removeEventListener('pointerdown', outside); };
   }, [open]);
-  return <header ref={header} className="site-header glass" data-tone={active === 'perspective' || active === 'contact' ? 'dark' : 'light'} data-expanded={open}>
+  useEffect(() => {
+    const compact = window.matchMedia('(max-width: 780px)');
+    let previous = window.scrollY;
+    let travel = 0;
+    const reset = () => { previous = window.scrollY; travel = 0; setHidden(false); };
+    const scroll = () => {
+      const current = Math.max(0, Math.min(window.scrollY, document.documentElement.scrollHeight - window.innerHeight));
+      const delta = current - previous;
+      previous = current;
+      if (!compact.matches || reducedMotion || open || contactOpen || current < 120 || header.current?.querySelector(':focus-visible')) {
+        travel = 0;
+        setHidden(false);
+        return;
+      }
+      travel = Math.sign(delta) === Math.sign(travel) ? travel + delta : delta;
+      if (travel > 28 || travel < -12) { setHidden(travel > 0); travel = 0; }
+    };
+    reset();
+    window.addEventListener('scroll', scroll, { passive: true });
+    compact.addEventListener('change', reset);
+    return () => { window.removeEventListener('scroll', scroll); compact.removeEventListener('change', reset); };
+  }, [open, contactOpen, reducedMotion]);
+  return <header ref={header} className="site-header glass" data-tone={active === 'perspective' || active === 'contact' ? 'dark' : 'light'} data-expanded={open} data-hidden={hidden && !open && !contactOpen && !reducedMotion} onFocusCapture={() => setHidden(false)}>
     <Brand />
     <nav className="desktop-nav" aria-label="Main navigation">
       {navigation.map((item) => <a key={item.id} href={`#${item.id}`} aria-current={active === item.id ? 'location' : undefined}>{active === item.id && <motion.span className="nav-indicator" layoutId="navigation-pill" transition={{ type: 'spring', stiffness: 320, damping: 30 }} />}<span>{item.label}</span></a>)}
     </nav>
-    <a href="#contact" className="header-contact">Let’s talk</a>
+    <button type="button" className="header-contact" aria-haspopup="dialog" aria-controls="contact-sheet" onClick={event => onContact(event.currentTarget)}>Let’s talk</button>
     <button className="menu-toggle" ref={toggle} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(!open)}><span className="menu-label">{open ? 'Close' : 'Menu'}</span><svg className="menu-lines" viewBox="0 0 20 20" fill="none" aria-hidden="true"><motion.path initial={false} animate={{ d: open ? 'M5 5L15 15M5 15L15 5' : 'M3 7L17 7M3 13L17 13' }} transition={{ duration: reducedMotion ? 0 : .22 }} stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg></button>
-    <AnimatePresence>{open && <motion.nav id="mobile-navigation" className="mobile-nav" aria-label="Mobile navigation" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: reducedMotion ? 0 : .35, ease }}>{navigation.map((item) => <a key={item.id} href={`#${item.id}`} onClick={() => setOpen(false)}>{item.label}</a>)}<a href="#contact" onClick={() => setOpen(false)}>Let’s talk</a></motion.nav>}</AnimatePresence>
+    <AnimatePresence>{open && <motion.nav id="mobile-navigation" className="mobile-nav" aria-label="Mobile navigation" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: reducedMotion ? 0 : .35, ease }}>{navigation.map((item) => <a key={item.id} href={`#${item.id}`} onClick={() => setOpen(false)}>{item.label}</a>)}<button type="button" aria-haspopup="dialog" aria-controls="contact-sheet" onClick={() => { setOpen(false); onContact(toggle.current!); }}>Let’s talk</button></motion.nav>}</AnimatePresence>
   </header>;
 }
 
@@ -94,6 +118,9 @@ function Perspective({ reducedMotion }: { reducedMotion: boolean }) {
 }
 
 export default function App() {
+  const [contactOpen, setContactOpen] = useState(false);
+  const contactTrigger = useRef<HTMLElement | null>(null);
+  const openContact = (trigger: HTMLElement) => { contactTrigger.current = trigger; setContactOpen(true); };
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   useEffect(() => {
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -104,7 +131,7 @@ export default function App() {
   const reducedMotion = systemReduced;
   return <MotionConfig reducedMotion={reducedMotion ? 'always' : 'never'} transition={{ ease, duration: .7 }}><div className="site" data-motion={reducedMotion ? 'reduced' : 'full'}>
     <a className="skip-link" href="#main">Skip to content</a>
-    <Header reducedMotion={reducedMotion} />
+    <Header reducedMotion={reducedMotion} contactOpen={contactOpen} onContact={openContact} />
     <main id="main"><Hero reducedMotion={reducedMotion} /><Perspective reducedMotion={reducedMotion} /><Services reducedMotion={reducedMotion} /><Corridors reducedMotion={reducedMotion} /><People reducedMotion={reducedMotion} /><Contact reducedMotion={reducedMotion} /></main>
     <footer className="footer">
       <div className="footer-heading">
@@ -123,6 +150,7 @@ export default function App() {
         <nav aria-label="Footer navigation">{navigation.map(item => <a key={item.id} href={`#${item.id}`}>{item.label}</a>)}</nav>
       </div>
     </footer>
+    <ContactSheet open={contactOpen} reducedMotion={reducedMotion} onDismiss={() => setContactOpen(false)} onClosed={() => contactTrigger.current?.focus({ preventScroll: true })} />
 
   </div></MotionConfig>;
 }

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from 'motion/react'
+import { motion, useInView, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import './Corridors.css'
 
 const perspectives = [
@@ -54,7 +54,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
   const rotateX = useTransform(scrollYProgress, [0, 1], [17, 0])
   const y = useTransform(scrollYProgress, [0, 1], [100, 0])
   const perspective = perspectives[selected]
-  const transition = { duration: quiet ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] as const }
+  const transition = { duration: quiet ? 0 : 0.45, ease: [0.22, 1, 0.36, 1] as const }
 
   return (
     <section ref={section} className="corridor-section" id="perspective" aria-labelledby="corridor-title" data-motion={running ? 'running' : 'paused'}>
@@ -70,7 +70,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
           <div className="corridor-controls" role="group" aria-label="Explore our regional perspective">
             {perspectives.map((item, index) => (
               <button key={item.name} type="button" className="corridor-control" aria-pressed={selected === index} onClick={() => setSelected(index)}>
-                {selected === index && <motion.span className="corridor-control-active" layoutId="atlas-active-region" transition={quiet ? { duration: 0 } : { type: 'spring', stiffness: 360, damping: 32 }} />}
+                {selected === index && <motion.span className="corridor-control-active" layoutId="atlas-active-region" transition={transition} />}
                 <span>{item.short}</span>
               </button>
             ))}
@@ -78,9 +78,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
         </div>
         <div className="corridor-region-title" aria-hidden="true">
           <span>PERSPECTIVE / {perspective.code}</span>
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.p key={selected} initial={{ opacity: 0, y: quiet ? 0 : 30, filter: quiet ? 'none' : 'blur(8px)' }} animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }} exit={{ opacity: 0, y: quiet ? 0 : -20, filter: quiet ? 'none' : 'blur(8px)' }} transition={{ duration: quiet ? 0 : 0.35 }}>{perspective.name}</motion.p>
-          </AnimatePresence>
+          <motion.p key={selected} initial={quiet ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={transition}>{perspective.name}</motion.p>
         </div>
         <div className="corridor-geography">
           <svg className="corridor-map" viewBox="200 40 440 320" aria-label="Explore our commercial perspective across the GCC, India and Singapore" role="group">
@@ -91,14 +89,14 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
               <linearGradient id="corridor-route-light" x1="0" y1="0" x2="1" y2="1"><stop stopColor="#b7bc91" /><stop offset=".5" stopColor="#fff3c9" /><stop offset="1" stopColor="#c2a975" /></linearGradient>
               <filter id="corridor-route-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="2.5" /></filter>
             </defs>
-            <motion.g data-testid="route-camera" animate={perspective.camera} initial={false} transition={{ ...transition, duration: quiet ? 0 : 1.3 }} style={{ transformOrigin: '400px 230px' }}>
+            <motion.g data-testid="route-camera" animate={perspective.camera} initial={false} transition={transition} style={{ transformOrigin: '400px 230px' }}>
               <circle cx="415" cy="210" r="220" fill="url(#corridor-map-glow)" />
               <g className="corridor-grid" fill="none">{[80, 160, 240, 320, 400].map(row => <path key={row} d={`M20 ${row}H740`} />)}{[100, 180, 260, 340, 420, 500, 580, 660].map(col => <path key={col} d={`M${col} -20V450`} />)}</g>
               <g className="corridor-orbits" fill="none"><ellipse cx="410" cy="220" rx="245" ry="165" /><ellipse cx="410" cy="220" rx="190" ry="126" /><ellipse cx="410" cy="220" rx="290" ry="200" /></g>
               <rect x="0" y="-60" width="760" height="530" fill="url(#corridor-dots)" clipPath="url(#corridor-land)" opacity=".66" />
               <g className="corridor-route-lines" fill="none">
                 {routes.map((route, index) => <path key={`glow-${index}`} d={route} stroke="#e4d49e" strokeWidth="4" opacity=".17" filter="url(#corridor-route-glow)" />)}
-                {routes.map((route, index) => <motion.path key={`${selected}-${index}`} d={route} stroke="url(#corridor-route-light)" strokeWidth={index === selected - 1 || selected === 0 ? 1.3 : 0.75} initial={{ pathLength: quiet ? 1 : 0 }} animate={{ pathLength: inView || quiet ? 1 : 0, opacity: selected === 0 || index === selected - 1 ? 0.95 : 0.35 }} transition={{ duration: quiet ? 0 : 1.8, delay: quiet ? 0 : index * 0.18, ease: 'easeInOut' }} />)}
+                {routes.map((route, index) => <motion.path key={route} d={route} stroke="url(#corridor-route-light)" initial={{ pathLength: quiet ? 1 : 0 }} animate={{ strokeWidth: index === selected - 1 || selected === 0 ? 1.3 : 0.75, pathLength: inView || quiet ? 1 : 0, opacity: selected === 0 || index === selected - 1 ? 0.95 : 0.35 }} transition={transition} />)}
               </g>
               {running && routes.map((route, index) => <g key={`traveler-${index}`} aria-hidden="true"><circle r="4" fill="#f4dfaa" opacity=".7" filter="url(#corridor-route-glow)"><animateMotion dur={`${4 + index}s`} repeatCount="indefinite" path={route} /></circle><circle r="2" fill="#fff9dc"><animateMotion dur={`${4 + index}s`} repeatCount="indefinite" path={route} /></circle></g>)}
               {perspectives.map((item, index) => (
@@ -116,7 +114,7 @@ export default function Corridors({ reducedMotion }: { reducedMotion?: boolean }
         <div className="corridor-atlas-bottom">
           <div className="corridor-detail" aria-live="polite" aria-atomic="true">
             {perspectives.map((item, index) => (
-              <motion.div key={item.name} aria-hidden={selected !== index} initial={false} animate={{ opacity: selected === index ? 1 : 0, y: quiet || selected === index ? 0 : 8 }} transition={{ duration: quiet ? 0 : 0.25 }}>
+              <motion.div key={item.name} aria-hidden={selected !== index} initial={false} animate={{ opacity: selected === index ? 1 : 0, y: quiet || selected === index ? 0 : 8 }} transition={transition}>
                 <span className="corridor-detail-label">THE PERSPECTIVE</span>
                 <h3>{item.label}</h3>
                 <p>{item.text}</p>
